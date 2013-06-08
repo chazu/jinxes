@@ -1,2 +1,7 @@
-{"text": "hello tartan!", "height": 10, "width": 20, "border": true}
-
+{
+    "widget": "text",
+    "text": "hello tartan!",
+    "height": 10,
+    "width": 30,
+    "border": true
+}
