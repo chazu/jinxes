@@ -4,5 +4,6 @@
     "text": "hello tartan!",
     "height": 10,
     "width": 30,
-    "border": true
+    "border": true,
+    "anchor": [2, 2]
 }

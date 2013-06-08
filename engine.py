@@ -16,6 +16,8 @@ class TartanDisplay(object):
     def refresh(self):
         self.display.refresh()
 
+    def blit(self, widget):
+        self.canvas.blit(widget.anchor[0], widget.anchor[1], widget.canvas)
 
 class Widget(object):
 
@@ -40,6 +42,12 @@ class Widget(object):
             self.canvas.draw_box(0, 0, self.spec["width"],
                                  self.spec["height"],"X")
 
+    def set_anchor(self):
+        if self.specifies("anchor"):
+            self.anchor = self.spec["anchor"]
+        else:
+            self.anchor = (0, 0)
+
     def text_buffer_builder(self):
         if self.specifies("text"):
             self.text_buffer = self.spec["text"]
@@ -63,16 +71,15 @@ class Widget(object):
             print "creating generic size canvas"
             self.canvas = Canvas(0, 0)
             self.canvas.set_color_ansi(caca.COLOR_RED, caca.COLOR_BLUE)
+        self.set_anchor()
         self.border_builder()
         self.text_buffer_builder()
-
-
 
 config = json.load(open("tui.json"))
 display = TartanDisplay()
 widget = Widget(config)
 
 widget.draw()
-display.canvas.blit(0, 0, widget.canvas)
+display.blit(widget)
 display.refresh()
 display.display.get_event(caca.EVENT_KEY_PRESS, Event(), 99999999)
