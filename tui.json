@@ -1,7 +1,7 @@
 {
     "name": "test",
     "widget": "text",
-    "text": "hello tartan!",
+    "text": "hello tartan! This is some text that will need to wrap! And it works! How FUCKING cool is that?",
     "height": 10,
     "width": 30,
     "border": true,

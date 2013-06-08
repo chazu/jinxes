@@ -19,12 +19,34 @@ class TartanDisplay(object):
     def blit(self, widget):
         self.canvas.blit(widget.anchor[0], widget.anchor[1], widget.canvas)
 
+
+def chunks(l, n):
+    """ Yield successive n-sized chunks from l.
+    """
+    for i in xrange(0, len(l), n):
+        yield l[i:i+n]
+
 class Widget(object):
 
+    def draw_text_buffer(self):
+        draw_width = (self.width - 2 if self.border == True else self.width)
+        text_lines = chunks(self.text_buffer, draw_width)
+        print "Text lines: " + str(text_lines)
+        line_start = self.text_origin
+        for line in text_lines:
+            self.canvas.put_str(line_start[0],
+                                line_start[1],
+                                line)
+            line_start[1] += 1
+
+    def draw_border(self):
+            self.canvas.draw_box(0, 0, self.spec["width"],
+                                 self.spec["height"],"X")
+
     def draw(self):
-            self.canvas.put_str(self.text_origin[0],
-                                self.text_origin[1],
-                                self.text_buffer)
+        if self.border:
+            self.draw_border()
+        self.draw_text_buffer()
 
     def specifies(self, key, value=None):
         """
@@ -39,8 +61,6 @@ class Widget(object):
         if self.specifies("border", True):
             print "drawing border"
             self.border = True
-            self.canvas.draw_box(0, 0, self.spec["width"],
-                                 self.spec["height"],"X")
 
     def set_anchor(self):
         if self.specifies("anchor"):
@@ -52,12 +72,14 @@ class Widget(object):
         if self.specifies("text"):
             self.text_buffer = self.spec["text"]
         if self.specifies("border", True):
-            self.text_origin = (1, 1)
+            self.text_origin = [1, 1]
         else:
             self.text_origin = (0, 0)
 
     def __init__(self, spec):
         self.spec = spec
+        self.width = self.spec["width"]
+        self.height = self.spec["height"]
         if self.specifies('name'):
             self.name = spec["name"]
         else:
