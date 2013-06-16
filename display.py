@@ -1,8 +1,11 @@
+import json, os
+
 import caca
 from caca.canvas import Canvas, CanvasError
 from caca.display import Display, DisplayError, Event
 
 from widget import Widget
+from fileparser import FileParser
 
 class TartanDisplay(object):
 
@@ -11,7 +14,7 @@ class TartanDisplay(object):
         self.display = Display(self.canvas)
         self.display.set_driver('gl')
         self.widgets = []
-
+        self.parser = FileParser()
     def refresh(self):
         self.display.refresh()
 
@@ -22,3 +25,7 @@ class TartanDisplay(object):
         for widget in self.widgets:
             widget.draw()
             self.blit(widget)
+
+    def load_from_file(self, filepath):
+        config = json.load(open(filepath))
+        self.widgets = self.parser.parse(config)

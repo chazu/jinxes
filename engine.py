@@ -1,24 +1,26 @@
 import sys
-import json, os
 
 import caca
 from caca.canvas import Canvas, CanvasError
 from caca.display import Display, DisplayError, Event
 
-from fileparser import FileParser
 from display import TartanDisplay
 from widget import Widget
 
-config = json.load(open("tui.json"))
-display = TartanDisplay()
-parser = FileParser()
+class App:
 
-widgets = parser.parse(config)
+    def __init__(self):
+        self.display = TartanDisplay()
 
-for widget in widgets:
-    display.widgets.append(widget)
+    def run(self):
+        self.display.build_display()
+        while 1:
+            self.display.refresh()
+            self.display.display.get_event(caca.EVENT_KEY_PRESS, Event(), 99999999)
 
-display.build_display()
-display.refresh()
+app = App()
+app.display.load_from_file('tui.json')
 
-display.display.get_event(caca.EVENT_KEY_PRESS, Event(), 99999999)
+app.run()
+
+
