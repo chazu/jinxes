@@ -16,6 +16,20 @@ def multiIndex(the_object, index_array):
 
 class Widget(object):
 
+    def specifies(self, key, value=None, path=None):
+        """
+        Key - The key to search for
+        Value - A value to check equality for
+        Path - The path in the spec to search
+
+        True if the spec doc has the key.
+        If value is passed in, True only
+        if key is present and equal to value
+        """
+        target = multiIndex(self.spec, path) if path else self.spec
+        return key in self.spec.keys() and (
+            self.spec[key] == value if value != None else True)
+
     def draw_text_buffer(self):
         draw_width = (self.width - 2 if self.border == True else self.width)
         text_lines = chunks(self.text_buffer, draw_width)
@@ -36,17 +50,8 @@ class Widget(object):
             self.draw_border()
         self.draw_text_buffer()
 
-    def specifies(self, key, value=None):
-        """
-        True if the spec doc has the key.
-        If value is passed in, True only
-        if key is present and equal to value
-        """
-        return key in self.spec.keys() and (
-            self.spec[key] == value if value != None else True)
-
     def border_builder(self):
-        if self.specifies("border", True):
+        if self.specifies("border"):
             print "drawing border"
             self.border = True
 
