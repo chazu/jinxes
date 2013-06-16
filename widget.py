@@ -20,6 +20,15 @@ def isDict(thing):
 
 class Widget(object):
 
+    # Default json structures
+    defaultBorderAttributes = {
+        "present": True,
+        "visible": True,
+        "character": "X",
+        "fgColor": 0,
+        "bgColor": 1,
+        }
+
     def specifies(self, key, value=None, path=None):
         """
         Key - The key to search for
@@ -44,6 +53,12 @@ class Widget(object):
         return key in target.keys() and (
             target[key] == value if value != None else True)
 
+    def specifies_not_equal(self, key, value):
+        """
+        True if the value is specified but not equal to given value
+        """
+        return self.spec[key] != value
+
     def draw_text_buffer(self):
         draw_width = (self.width - 2 if self.border == True else self.width)
         text_lines = chunks(self.text_buffer, draw_width)
@@ -56,10 +71,11 @@ class Widget(object):
             line_start[1] += 1
 
     def draw_border(self):
-        print "CHAR: " + str(self.border_character)
-        char = self.border_character
-        self.canvas.draw_box(0, 0, self.spec["width"],
-                             self.spec["height"],str(char))
+        if self.border["visible"] and self.border["present"]:
+            print "INFO: Border char: " + str(self.border["character"])
+            char = self.border["character"]
+            self.canvas.draw_box(0, 0, self.spec["width"],
+                                 self.spec["height"],str(char))
 
     def draw(self):
         if self.border:
@@ -67,18 +83,20 @@ class Widget(object):
         self.draw_text_buffer()
 
     def border_builder(self):
-        if self.specifies("border"):
-            print "drawing border"
-            self.border = True
-        if self.specifies("character",path=["border"]):
-            self.border_character = self.spec["border"]["character"]
+        if self.specifies("border") and isDict(self.spec["border"]):
+            print("DEBUG: Parsing border spec: ")
+            print(str(self.spec["border"]))
+            print("INFO:  Overriding default border attrs")
+            self.border = Widget.defaultBorderAttributes.copy()
+            self.border.update(self.spec["border"])
         else:
-            self.border_character = "X"
+            print("INFO:  Using default border attrs")
+            self.border = Widget.defaultBorderAttributes.copy()
 
     def text_buffer_builder(self):
         if self.specifies("text"):
             self.text_buffer = self.spec["text"]
-        if self.specifies("border"):
+        if self.border["present"]:
             self.text_origin = [1, 1]
         else:
             self.text_origin = [0, 0]
@@ -89,7 +107,6 @@ class Widget(object):
         else:
             self.anchor = (0, 0)
 
-
     def __init__(self, spec):
         self.spec = spec
         self.width = self.spec["width"]
@@ -98,8 +115,9 @@ class Widget(object):
             self.name = spec["name"]
         else:
             self.name = "Unknown"
+        print("INFO: Creating widget " + self.spec["name"])
         if self.specifies("height") and self.specifies("width"):
-            print "creating canvas of specified size"
+            print("DEBUG: creating canvas of specified size")
             self.canvas = Canvas(spec["width"],
                             spec["height"])
             self.canvas.set_color_ansi(caca.COLOR_WHITE, caca.COLOR_BLACK)

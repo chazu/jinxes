@@ -1,11 +1,14 @@
 [
     {
-        "name": "test",
+        "name": "one",
         "widget": "text",
         "text": "hello tartan! This is some text that will need to wrap! And it works! How FUCKING cool is that?",
+        "border":
+        {
+            "present": false
+        },
         "height": 10,
         "width": 30,
-        "border": true,
         "anchor": [2, 2]
     },
     {
@@ -14,7 +17,7 @@
         "text": "hello tartan! This is some text that will need to wrap! And it works! How FUCKING cool is that?",
         "height": 20,
         "width": 40,
-        "border": {"character": "S"},
+        "border": {"character": "Z"},
         "anchor": [10, 2]
     }
 ]

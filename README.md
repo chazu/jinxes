@@ -31,3 +31,9 @@ All widgets must have the following fields:
        bgColor: "RED",
        fgColor: "BLUE",
      }
+
+## Internals
+
+### Builders
+
+When constructing a widget from the specified JSON, the engine will attempt to merge the relevant portions of the specification dictionary into a dictionary which specifies default values. This way, those values you specify will overwrite the defaults and become part of the widget instance's state, while the defaults will remain for any optional parameters you leave unspecified.
