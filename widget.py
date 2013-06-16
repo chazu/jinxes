@@ -75,12 +75,6 @@ class Widget(object):
         else:
             self.border_character = "X"
 
-    def set_anchor(self):
-        if self.specifies("anchor"):
-            self.anchor = self.spec["anchor"]
-        else:
-            self.anchor = (0, 0)
-
     def text_buffer_builder(self):
         if self.specifies("text"):
             self.text_buffer = self.spec["text"]
@@ -88,6 +82,13 @@ class Widget(object):
             self.text_origin = [1, 1]
         else:
             self.text_origin = [0, 0]
+
+    def anchor_builder(self):
+        if self.specifies("anchor"):
+            self.anchor = self.spec["anchor"]
+        else:
+            self.anchor = (0, 0)
+
 
     def __init__(self, spec):
         self.spec = spec
@@ -106,6 +107,6 @@ class Widget(object):
             print "creating generic size canvas"
             self.canvas = Canvas(0, 0)
             self.canvas.set_color_ansi(caca.COLOR_WHITE, caca.COLOR_BLACK)
-        self.set_anchor()
+        self.anchor_builder()
         self.border_builder()
         self.text_buffer_builder()
