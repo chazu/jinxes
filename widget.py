@@ -27,8 +27,8 @@ class Widget(object):
         if key is present and equal to value
         """
         target = multiIndex(self.spec, path) if path else self.spec
-        return key in self.spec.keys() and (
-            self.spec[key] == value if value != None else True)
+        return key in target.keys() and (
+            target[key] == value if value != None else True)
 
     def draw_text_buffer(self):
         draw_width = (self.width - 2 if self.border == True else self.width)
