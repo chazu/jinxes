@@ -17,6 +17,7 @@ def multiIndex(the_object, index_array):
 def isDict(thing):
     return type(thing) == dict
 
+
 class Widget(object):
 
     def specifies(self, key, value=None, path=None):
@@ -55,8 +56,10 @@ class Widget(object):
             line_start[1] += 1
 
     def draw_border(self):
-            self.canvas.draw_box(0, 0, self.spec["width"],
-                                 self.spec["height"],"X")
+        print "CHAR: " + str(self.border_character)
+        char = self.border_character
+        self.canvas.draw_box(0, 0, self.spec["width"],
+                             self.spec["height"],str(char))
 
     def draw(self):
         if self.border:
@@ -67,6 +70,10 @@ class Widget(object):
         if self.specifies("border"):
             print "drawing border"
             self.border = True
+        if self.specifies("character",path=["border"]):
+            self.border_character = self.spec["border"]["character"]
+        else:
+            self.border_character = "X"
 
     def set_anchor(self):
         if self.specifies("anchor"):
@@ -77,10 +84,10 @@ class Widget(object):
     def text_buffer_builder(self):
         if self.specifies("text"):
             self.text_buffer = self.spec["text"]
-        if self.specifies("border", True):
+        if self.specifies("border"):
             self.text_origin = [1, 1]
         else:
-            self.text_origin = (0, 0)
+            self.text_origin = [0, 0]
 
     def __init__(self, spec):
         self.spec = spec
