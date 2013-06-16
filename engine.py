@@ -6,6 +6,12 @@ from caca.display import Display, DisplayError, Event
 
 import json, os
 
+def chunks(l, n):
+    """ Yield successive n-sized chunks from l.
+    """
+    for i in xrange(0, len(l), n):
+        yield l[i:i+n]
+
 class TartanDisplay(object):
 
     def __init__(self):
@@ -19,12 +25,11 @@ class TartanDisplay(object):
     def blit(self, widget):
         self.canvas.blit(widget.anchor[0], widget.anchor[1], widget.canvas)
 
+    def build_display(self):
+        for widget in self.widgets:
+            widget.draw()
+            display.blit(widget)
 
-def chunks(l, n):
-    """ Yield successive n-sized chunks from l.
-    """
-    for i in xrange(0, len(l), n):
-        yield l[i:i+n]
 
 class Widget(object):
 
