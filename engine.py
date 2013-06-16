@@ -18,6 +18,7 @@ class TartanDisplay(object):
         self.canvas = Canvas(0, 0)
         self.display = Display(self.canvas)
         self.display.set_driver('gl')
+        self.widgets = []
 
     def refresh(self):
         self.display.refresh()
@@ -102,11 +103,27 @@ class Widget(object):
         self.border_builder()
         self.text_buffer_builder()
 
+class FileParser:
+
+    def __init__(self):
+        pass
+
+    def parse(self, widgets):
+        acc = []
+        for widget in widgets:
+            acc.append(Widget(widget))
+        return acc
+
 config = json.load(open("tui.json"))
 display = TartanDisplay()
-widget = Widget(config)
+parser = FileParser()
 
-widget.draw()
-display.blit(widget)
+widgets = parser.parse(config)
+
+for widget in widgets:
+    display.widgets.append(widget)
+
+display.build_display()
 display.refresh()
+
 display.display.get_event(caca.EVENT_KEY_PRESS, Event(), 99999999)
