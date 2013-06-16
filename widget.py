@@ -8,6 +8,12 @@ def chunks(l, n):
     for i in xrange(0, len(l), n):
         yield l[i:i+n]
 
+def multiIndex(the_object, index_array):
+    """
+    TODO Write this docstring
+    """
+    return reduce(lambda obj, key: obj[key], index_array, the_object)
+
 class Widget(object):
 
     def draw_text_buffer(self):
