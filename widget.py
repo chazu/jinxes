@@ -14,6 +14,9 @@ def multiIndex(the_object, index_array):
     """
     return reduce(lambda obj, key: obj[key], index_array, the_object)
 
+def isDict(thing):
+    return type(thing) == dict
+
 class Widget(object):
 
     def specifies(self, key, value=None, path=None):
@@ -26,7 +29,17 @@ class Widget(object):
         If value is passed in, True only
         if key is present and equal to value
         """
-        target = multiIndex(self.spec, path) if path else self.spec
+        if path != None and isDict(
+                multiIndex(self.spec, path)
+        ):
+            try:
+                target = multiIndex(self.spec, path)
+            except KeyError:
+                print "WARNING: Key error when requesting path " + \
+                    str(path) + " for widget " + self.name
+                target = self.spec
+        else:
+            target = self.spec
         return key in target.keys() and (
             target[key] == value if value != None else True)
 
