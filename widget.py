@@ -47,19 +47,17 @@ class Widget(object):
         If value is passed in, True only
         if key is present and equal to value
         """
-        if path != None and isDict(
-                multiIndex(self.spec, path)
-        ):
-            try:
+        try:
+            if path != None and isDict(multiIndex(self.spec, path)):
                 target = multiIndex(self.spec, path)
-            except KeyError:
-                print "WARNING: Key error when requesting path " + \
-                    str(path) + " for widget " + self.name
+            else:
                 target = self.spec
-        else:
+                return key in target.keys() and (
+                    target[key] == value if value != None else True)
+        except KeyError:
+            print "WARNING: Key error when requesting path " + \
+                str(path) + " for widget " + self.name
             target = self.spec
-        return key in target.keys() and (
-            target[key] == value if value != None else True)
 
     def specifies_not_equal(self, key, value):
         """
