@@ -86,9 +86,11 @@ class Widget(object):
                                  self.spec["height"],str(char))
 
     def draw(self):
-        if self.border:
-            self.draw_border()
-        self.draw_text_buffer()
+        self.draw_border()
+        self.draw_line_buffer()
+
+    # Builder methods - take the spec for the widget and build out
+    # instance state
 
     def border_builder(self):
         if self.specifies("border") and isDict(self.spec["border"]):
