@@ -7,15 +7,15 @@
         {
             "present": false
         },
-        "height": 10,
+        "height": 8,
         "width": 30,
         "anchor": [2, 2]
     },
     {
         "name": "two",
         "widget": "text",
-        "text": "hello tartan! This is some text that will need to wrap! And it works! How FUCKING cool is that?",
-        "height": 20,
+        "text": "hello tartan! This is some text that will need to wrap! And it works! How FUCKING cool is that? I mean, WOW! This is so crazy! I really hope that development continues to go well on this project, cos I have a lot invested in it! ZOMG! I think its important to keep it highly modular and pluggable, lets not forget that.",
+        "height": 8,
         "width": 40,
         "border": {"character": "Z"},
         "anchor": [10, 2]
