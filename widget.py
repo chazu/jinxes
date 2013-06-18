@@ -67,12 +67,9 @@ class Widget(object):
         """
         return self.spec[key] != value
 
-    def draw_text_buffer(self):
-        draw_width = (self.width - 2 if self.border == True else self.width)
-        text_lines = chunks(self.text_buffer, draw_width)
-        print "Text lines: " + str(text_lines)
+    def draw_line_buffer(self):
         line_start = self.text_origin
-        for line in text_lines:
+        for line in self.get_visible_slice():
             self.canvas.put_str(line_start[0],
                                 line_start[1],
                                 line)
@@ -103,6 +100,16 @@ class Widget(object):
             print("INFO:  Using default border attrs")
             self.border = Widget.defaultBorderAttributes.copy()
 
+    def line_buffer_builder(self):
+        """
+        Update internal line buffer based on dimensions
+        of widget, border and length of text contents
+
+        Call this after resize
+        """
+        draw_width = (self.width - 2 if self.border["present"] == True else self.width)
+        self.line_buffer = chunks(self.text_buffer, draw_width)
+
     def text_buffer_builder(self):
         if self.specifies("text"):
             self.text_buffer = self.spec["text"]
@@ -116,6 +123,39 @@ class Widget(object):
             self.anchor = self.spec["anchor"]
         else:
             self.anchor = (0, 0)
+
+    def visible_slice_builder(self):
+        """
+        initialize or change visible slice
+        """
+        if self.border["present"]:
+            self.visible_lines = self.height - 2
+        else:
+            self.visible_lines = self.height
+
+    def scroll_builder(self):
+        """
+        Build/Initialize state related to scrolling capabilities and
+        behavior
+        """
+        # set up scrolling
+        if self.specifies("scroll"):
+            self.scroll = Widget.defaultScrollingAttributes.copy()
+            self.scroll.update(self.spec["scroll"])
+        else:
+            self.scroll = Widget.defaultScrollingAttributes.copy()
+
+    def update_scroll_current_line(self, delta):
+        self.scroll["currentLine"] += int(delta)
+
+    def get_visible_slice(self):
+        """
+        return visible segment of line buffer
+        """
+        return list(self.line_buffer)[self.scroll["currentLine"]:
+                                            self.scroll["currentLine"] + \
+                                                self.visible_lines]
+
 
     def __init__(self, spec):
         self.spec = spec
@@ -137,4 +177,7 @@ class Widget(object):
             self.canvas.set_color_ansi(caca.COLOR_WHITE, caca.COLOR_BLACK)
         self.anchor_builder()
         self.border_builder()
+        self.scroll_builder()
         self.text_buffer_builder()
+        self.line_buffer_builder()
+        self.visible_slice_builder()
