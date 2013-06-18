@@ -20,13 +20,21 @@ def isDict(thing):
 
 class Widget(object):
 
-    # Default json structures
+    # Default json structures for nested instance config info
+    # Note that simple base-level data will just be stored in
+    # instance attributes without default attr dicts to override
+
     defaultBorderAttributes = {
         "present": True,
         "visible": True,
         "character": "X",
         "fgColor": 0,
-        "bgColor": 1,
+        "bgColor": 1
+        }
+
+    defaultScrollingAttributes = {
+        "scroll": False,
+        "currentLine": 0
         }
 
     def specifies(self, key, value=None, path=None):
