@@ -15,13 +15,17 @@ class TartanDisplay(object):
         self.display.set_driver('gl')
         self.widgets = []
         self.parser = FileParser()
+
     def refresh(self):
+
+        self.build_display()
         self.display.refresh()
 
     def blit(self, widget):
         self.canvas.blit(widget.anchor[0], widget.anchor[1], widget.canvas)
 
     def build_display(self):
+        self.canvas.clear()
         for widget in self.widgets:
             widget.draw()
             self.blit(widget)

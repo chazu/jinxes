@@ -1,7 +1,17 @@
+import time
+from copy import copy
+
 import caca
 from caca.canvas import Canvas, CanvasError
 from caca.display import Display, DisplayError, Event
 
+def listify(gen):
+    "Convert a generator into a function which returns a list"
+    def patched(*args, **kwargs):
+        return list(gen(*args, **kwargs))
+    return patched
+
+@listify
 def chunks(l, n):
     """ Yield successive n-sized chunks from l.
     """
@@ -66,7 +76,6 @@ class Widget(object):
         return self.spec[key] != value
 
     def draw_line_buffer(self):
-        line_start = self.text_origin
         for line in self.get_visible_slice():
             self.canvas.put_str(line_start[0],
                                 line_start[1],
@@ -75,27 +84,24 @@ class Widget(object):
 
     def draw_border(self):
         if self.border["visible"] and self.border["present"]:
-            print "INFO: Border char: " + str(self.border["character"])
             char = self.border["character"]
             self.canvas.draw_box(0, 0, self.spec["width"],
                                  self.spec["height"],str(char))
 
     def draw(self):
-        self.draw_border()
+        self.canvas.clear()
         self.draw_line_buffer()
+        self.draw_border()
 
     # Builder methods - take the spec for the widget and build out
     # instance state
 
     def border_builder(self):
         if self.specifies("border") and isDict(self.spec["border"]):
-            print("DEBUG: Parsing border spec: ")
             print(str(self.spec["border"]))
-            print("INFO:  Overriding default border attrs")
             self.border = Widget.defaultBorderAttributes.copy()
             self.border.update(self.spec["border"])
         else:
-            print("INFO:  Using default border attrs")
             self.border = Widget.defaultBorderAttributes.copy()
 
     def line_buffer_builder(self):
@@ -150,10 +156,15 @@ class Widget(object):
         """
         return visible segment of line buffer
         """
-        return list(self.line_buffer)[self.scroll["currentLine"]:
-                                            self.scroll["currentLine"] + \
-                                                self.visible_lines]
-
+        start = self.scroll["currentLine"]
+        end = start + self.visible_lines
+        res = self.line_buffer[start:]
+        res = res[:end]
+        # res = self.line_buffer[self.scroll["currentLine"]:
+        #                                     self.scroll["currentLine"] + \
+        #                                         self.visible_lines]
+        print str(res)
+        return res
 
     def __init__(self, spec):
         self.spec = spec
@@ -163,14 +174,11 @@ class Widget(object):
             self.name = spec["name"]
         else:
             self.name = "Unknown"
-        print("INFO: Creating widget " + self.spec["name"])
         if self.specifies("height") and self.specifies("width"):
-            print("DEBUG: creating canvas of specified size")
             self.canvas = Canvas(spec["width"],
                             spec["height"])
             self.canvas.set_color_ansi(caca.COLOR_WHITE, caca.COLOR_BLACK)
         else:
-            print "creating generic size canvas"
             self.canvas = Canvas(0, 0)
             self.canvas.set_color_ansi(caca.COLOR_WHITE, caca.COLOR_BLACK)
         self.anchor_builder()

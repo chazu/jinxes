@@ -32,8 +32,30 @@ All widgets must have the following fields:
        fgColor: "BLUE",
      }
 
+## Events
+
+### Subscription Format
+
+Since subscriptions are nested under local or remote, there is no need to specify this in the subscription data structure.
+
+
+{
+  "exchange"
+}
+
 ## Internals
 
 ### Builders
 
 When constructing a widget from the specified JSON, the engine will attempt to merge the relevant portions of the specification dictionary into a dictionary which specifies default values. This way, those values you specify will overwrite the defaults and become part of the widget instance's state, while the defaults will remain for any optional parameters you leave unspecified.
+
+## TODO
+
+ - Scrolling/buffers
+ - key bindings/event loop
+ - focus
+ - widgets in widgets
+ - content types: text, widgets, collections
+ - Parse text for color
+ - Possible refactor: override_or_assign function for default json
+ - Implement basic callbacks for changing UI
