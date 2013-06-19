@@ -163,10 +163,6 @@ class Widget(object):
         end = start + self.visible_lines
         res = self.line_buffer[start:]
         res = res[:end]
-        # res = self.line_buffer[self.scroll["currentLine"]:
-        #                                     self.scroll["currentLine"] + \
-        #                                         self.visible_lines]
-        print str(res)
         return res
 
     def __init__(self, spec):
