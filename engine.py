@@ -22,12 +22,19 @@ class App:
             if self.event_thing.get_type() == caca.EVENT_KEY_PRESS:
                 key = self.event_thing.get_key_ch()
                 print "Processing key: " + str(key)
+                # TODO: Widget instance whose callback is to be
+                # called will need to be known by the event loop
+                widget = self.display.widgets[0]
+
                 if key == ord("q"):
                     self.quit = True
                 if key == ord("j"):
-                    self.display.widgets[0].scroll["currentLine"] += 1
+                    if (widget.scroll["currentLine"] <
+                        widget.scroll["maxCurrentLine"]):
+                        widget.scroll["currentLine"] += 1
                 if key == ord("k"):
-                    self.display.widgets[0].scroll["currentLine"] -= 1
+                    if (widget.scroll["currentLine"] > 0):
+                        widget.scroll["currentLine"] -= 1
                 key=None
 
     def run(self):

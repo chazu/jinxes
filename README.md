@@ -53,9 +53,10 @@ When constructing a widget from the specified JSON, the engine will attempt to m
 
  - Scrolling/buffers
  - key bindings/event loop
+   - Reprocess spec for each widget inside of app class, 
+     binding functions to callbacks
  - focus
  - widgets in widgets
  - content types: text, widgets, collections
  - Parse text for color
  - Possible refactor: override_or_assign function for default json
- - Implement basic callbacks for changing UI

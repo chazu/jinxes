@@ -76,6 +76,7 @@ class Widget(object):
         return self.spec[key] != value
 
     def draw_line_buffer(self):
+        line_start = copy(self.text_origin)
         for line in self.get_visible_slice():
             self.canvas.put_str(line_start[0],
                                 line_start[1],
@@ -113,6 +114,8 @@ class Widget(object):
         """
         draw_width = (self.width - 2 if self.border["present"] == True else self.width)
         self.line_buffer = chunks(self.text_buffer, draw_width)
+        # Dont allow scrolling beyond end of line buffer
+        self.scroll["maxCurrentLine"] = len(self.line_buffer)
 
     def text_buffer_builder(self):
         if self.specifies("text"):
