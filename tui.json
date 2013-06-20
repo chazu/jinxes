@@ -1,14 +1,36 @@
-[
+{
+    "app":
     {
-        "name": "two",
-        "widget": "text",
-        "text": "hello tartan! This is some text that will need to wrap! And it works! How FUCKING cool is that? I mean, WOW! This is so crazy! I really hope that development continues to go well on this project, cos I have a lot invested in it! ZOMG! I think its important to keep it highly modular and pluggable, lets not forget that.",
-        "height": 8,
-        "width": 40,
-        "scroll": {
-            "scroll": true
-        },
-        "border": {"character": "Z"},
-        "anchor": [10, 2]
-    }
-]
+        "keyHooks":
+        [
+            {
+                "key": "q",
+                "func": "quitApp"
+            },
+            {
+                "key": "j",
+                "func": "scrollFocusUp"
+            },
+            {
+                "key": "k",
+                "func": "scrollFocusDown"
+            }
+
+        ]
+    },
+    "widgets":
+    [
+        {
+            "name": "two",
+            "widget": "text",
+            "text": "hello tartan! This is some text that will need to wrap! And it works! How FUCKING cool is that? I mean, WOW! This is so crazy! I really hope that development continues to go well on this project, cos I have a lot invested in it! ZOMG! I think its important to keep it highly modular and pluggable, lets not forget that.",
+            "height": 8,
+            "width": 40,
+            "scroll": {
+                "scroll": true
+            },
+            "border": {"character": "Z"},
+            "anchor": [10, 2]
+        }
+    ]
+}
