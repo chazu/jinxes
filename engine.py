@@ -36,6 +36,14 @@ class LocalEventDispatch:
 
 class App:
 
+    defaultAppState = {
+        "focus":{
+            "wrap": False
+        },
+        "size": "auto",
+        "keys": [{"q":"quitApp"}],
+    }
+
     def __init__(self):
         self.display = TartanDisplay()
         self.local_event_dispatch = LocalEventDispatch()
@@ -72,6 +80,8 @@ class App:
             self.display.refresh()
             self.process_events()
 
+## Keypress Functions ###################################
+
 def quitApp(app):
     app.quit = True
 
@@ -84,6 +94,7 @@ def scrollFocusUp(app):
     if (app.focused_widget.scroll["currentLine"] > 0):
         app.focused_widget.scroll["currentLine"] -= 1
 
+#########################################################
 
 app = App()
 app.display.load_from_file('tui.json')
