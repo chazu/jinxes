@@ -34,14 +34,9 @@ All widgets must have the following fields:
 
 ## Events
 
-### Subscription Format
+### User event handling
 
-Since subscriptions are nested under local or remote, there is no need to specify this in the subscription data structure.
-
-
-{
-  "exchange"
-}
+Local events triggered by the user are addressed separately from external (server) events.
 
 ## Internals
 
@@ -51,12 +46,17 @@ When constructing a widget from the specified JSON, the engine will attempt to m
 
 ## TODO
 
- - Scrolling/buffers
  - key bindings/event loop
-   - Reprocess spec for each widget inside of app class, 
-     binding functions to callbacks
- - focus
- - widgets in widgets
- - content types: text, widgets, collections
+   - Moving focus
+   - Widget-specific events
+ - widget formatting
+   - align: left, right, center
+   - margin/size
+ - widget nesting
+ - widget coloring
+   - bg/foreground
+   - border bg/foreground
+ - resizing?
+ - menus - list boxes, form controls...
  - Parse text for color
  - Possible refactor: override_or_assign function for default json
