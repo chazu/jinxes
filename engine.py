@@ -1,4 +1,8 @@
+import logging
+logging.basicConfig(level=logging.DEBUG)
+
 import sys
+import json
 
 import caca
 from caca.canvas import Canvas, CanvasError
@@ -44,8 +48,9 @@ class App:
         "keys": [{"q":"quitApp"}],
     }
 
-    def __init__(self):
-        self.display = TartanDisplay()
+    def __init__(self, filename):
+        self.spec = self.load_from_file(filename)
+        self.display = TartanDisplay(self.spec["widgets"])
         self.local_event_dispatch = LocalEventDispatch()
         self.digest_rate = 1000 #ms
         self.keypress_queue = []
@@ -54,6 +59,11 @@ class App:
 
         # Keypress hooks
         self.keypress_hooks = []
+
+    def load_from_file(self, filepath):
+        logging.debug("App loading filepath: " + str(filepath))
+        return json.load(open(filepath))
+
 
     def register_keypress_hook(self, hook):
         self.keypress_hooks.append(hook)
@@ -96,8 +106,8 @@ def scrollFocusUp(app):
 
 #########################################################
 
-app = App()
-app.display.load_from_file('tui.json')
+app = App('tui.json')
+
 # Focused widget (should be part of init
 app.focused_widget = app.display.widgets[0]
 
