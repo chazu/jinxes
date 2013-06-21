@@ -10,7 +10,7 @@ from caca.display import Display, DisplayError, Event
 
 from display import TartanDisplay
 from widget import Widget
-
+import hooks
 class LocalEventDispatch:
     """
     Takes events from inside of the engine (caca events
@@ -60,13 +60,22 @@ class App:
         # Keypress hooks
         self.keypress_hooks = []
 
+        # Parse spec
+        self.load_keypress_hooks()
+
+    def load_keypress_hooks(self):
+        for hook in self.spec["app"]["keyHooks"]:
+            print hook
+            self.register_keypress_hook(hook)
+
     def load_from_file(self, filepath):
         logging.debug("App loading filepath: " + str(filepath))
         return json.load(open(filepath))
 
 
     def register_keypress_hook(self, hook):
-        self.keypress_hooks.append(hook)
+        self.keypress_hooks.append({"key": hook["key"],
+                                    "func": getattr(hooks, hook["func"])})
 
     def get_handler_for_key(self, key):
         print key
@@ -90,31 +99,9 @@ class App:
             self.display.refresh()
             self.process_events()
 
-## Keypress Functions ###################################
-
-def quitApp(app):
-    app.quit = True
-
-def scrollFocusDown(app):
-    if (app.focused_widget.scroll["currentLine"] <
-        app.focused_widget.scroll["maxCurrentLine"]):
-        app.focused_widget.scroll["currentLine"] += 1
-
-def scrollFocusUp(app):
-    if (app.focused_widget.scroll["currentLine"] > 0):
-        app.focused_widget.scroll["currentLine"] -= 1
-
-#########################################################
-
 app = App('tui.json')
 
 # Focused widget (should be part of init
 app.focused_widget = app.display.widgets[0]
 
-app.register_keypress_hook({"key":"q",
-                            "func":quitApp})
-app.register_keypress_hook({"key": "j",
-                            "func": scrollFocusDown})
-app.register_keypress_hook({"key": "k",
-                            "func": scrollFocusUp})
 app.run()
