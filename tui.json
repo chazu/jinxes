@@ -1,4 +1,17 @@
 {
+    "styles":
+    [
+        {
+            "name": "redBlue",
+            "bgColor": "blue",
+            "fgColor": "red"
+        },
+        {
+            "name": "greenBlack",
+            "bgColor": "black",
+            "fgColor": "green"
+        }
+    ]
     "app":
     {
         "keyHooks":
