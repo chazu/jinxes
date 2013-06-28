@@ -40,6 +40,25 @@ class LocalEventDispatch:
 
 class App:
 
+    defaultColorMap = {
+        "black"        : 0x00,
+        "blue"         : 0x01,
+        "green"        : 0x02,
+        "cyan"         : 0x03,
+        "red"          : 0x04,
+        "magenta"      : 0x05,
+        "brown"        : 0x06,
+        "lightgray"    : 0x07,
+        "darkgray"     : 0x08,
+        "lightblue"    : 0x09,
+        "lightgreen"   : 0x0a,
+        "lightcyan"    : 0x0b,
+        "lightred"     : 0x0c,
+        "lightmagenta" : 0x0d,
+        "yellow"       : 0x0e,
+        "white"        : 0x0f,
+        }
+
     defaultAppState = {
         "focus":{
             "wrap": False
@@ -56,12 +75,30 @@ class App:
         self.keypress_queue = []
         self.event_thing = Event()
         self.quit = False
+        self.styles = {}
 
         # Keypress hooks
         self.keypress_hooks = []
 
         # Parse spec
         self.load_keypress_hooks()
+        self.load_styles()
+
+    def process_style(self, style):
+        """
+        Given a hash representing a style, convert
+        to a format usable by the engine, i.e.
+        convert color names to caca values
+        """
+        logging.debug("INFO: Loading Style " + style["name"])
+        return {
+            "fgColor": App.defaultColorMap[style["fgColor"]],
+            "bgColor": App.defaultColorMap[style["bgColor"]]
+            }
+
+    def load_styles(self):
+        for style in self.spec["styles"]:
+            self.process_style(style)
 
     def load_keypress_hooks(self):
         for hook in self.spec["app"]["keyHooks"]:
