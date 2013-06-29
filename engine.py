@@ -59,7 +59,16 @@ class App:
         "white"        : 15
         }
 
+    defaultStyles = [
+        {
+            "name": "default",
+            "bgColor": "black",
+            "fgColor": "white"
+            }
+        ]
+
     defaultAppState = {
+        "styles": defaultStyles,
         "focus":{
             "wrap": False
         },
