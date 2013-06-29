@@ -1,5 +1,6 @@
 import time
 from copy import copy
+import logging
 
 import caca
 from caca.canvas import Canvas, CanvasError
@@ -38,8 +39,7 @@ class Widget(object):
         "present": True,
         "visible": True,
         "character": "X",
-        "fgColor": 0,
-        "bgColor": 1
+        "style": "default"
         }
 
     defaultScrollingAttributes = {
@@ -75,6 +75,26 @@ class Widget(object):
         """
         return self.spec[key] != value
 
+    def style_value_for(self, style_target, value):
+        """
+        Lookup the relevant style stored in the spec
+        style_target - the portion of the widget's spec
+        which contains the style
+        value - the specific style portion we want: foreground,
+        background, etc.
+        """
+        # TODO We should cache these values on widget init, so we dont
+        # look them up every time we draw a damn widget
+        logging.debug("Looking up style " + self.spec[style_target]["style"] \
+                          + " for target " + style_target)
+        style_name = self.spec[style_target]["style"]
+        style = filter(lambda x: x["name"] == style_name,
+                       self.app.styles)[0]
+        logging.debug("Got App style: " + str(style))
+        color_value_for_style_element = style[value]
+        logging.debug("got style value: " + str(color_value_for_style_element))
+        return color_value_for_style_element
+
     def draw_line_buffer(self):
         line_start = copy(self.text_origin)
         for line in self.get_visible_slice():
@@ -86,6 +106,9 @@ class Widget(object):
     def draw_border(self):
         if self.border["visible"] and self.border["present"]:
             char = self.border["character"]
+            self.canvas.set_color_ansi(
+                self.style_value_for("border", "fgColor"),
+                self.style_value_for("border", "bgColor"))
             self.canvas.draw_box(0, 0, self.spec["width"],
                                  self.spec["height"],str(char))
 
@@ -181,6 +204,9 @@ class Widget(object):
         else:
             self.canvas = Canvas(0, 0)
             self.canvas.set_color_ansi(caca.COLOR_WHITE, caca.COLOR_BLACK)
+        logging.debug("Drawing widget for the first time: " + self.name)
+        logging.debug("Spec for widget:")
+        logging.debug(str(self.spec))
         self.anchor_builder()
         self.border_builder()
         self.scroll_builder()
