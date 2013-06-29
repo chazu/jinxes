@@ -41,22 +41,22 @@ class LocalEventDispatch:
 class App:
 
     defaultColorMap = {
-        "black"        : 0x00,
-        "blue"         : 0x01,
-        "green"        : 0x02,
-        "cyan"         : 0x03,
-        "red"          : 0x04,
-        "magenta"      : 0x05,
-        "brown"        : 0x06,
-        "lightgray"    : 0x07,
-        "darkgray"     : 0x08,
-        "lightblue"    : 0x09,
-        "lightgreen"   : 0x0a,
-        "lightcyan"    : 0x0b,
-        "lightred"     : 0x0c,
-        "lightmagenta" : 0x0d,
-        "yellow"       : 0x0e,
-        "white"        : 0x0f,
+        "black"        : 0,
+        "blue"         : 1,
+        "green"        : 2,
+        "cyan"         : 3,
+        "red"          : 4,
+        "magenta"      : 5,
+        "brown"        : 6,
+        "lightgray"    : 7,
+        "darkgray"     : 8,
+        "lightblue"    : 9,
+        "lightgreen"   : 10,
+        "lightcyan"    : 11,
+        "lightred"     : 12,
+        "lightmagenta" : 13,
+        "yellow"       : 14,
+        "white"        : 15
         }
 
     defaultAppState = {
