@@ -42,7 +42,9 @@
             "scroll": {
                 "scroll": true
             },
-            "border": {"character": "Z"},
+            "border": {"character": "Z",
+                       "style": "greenBlack"
+                      },
             "anchor": [10, 2]
         }
     ]
