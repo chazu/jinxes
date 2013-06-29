@@ -48,15 +48,21 @@ When constructing a widget from the specified JSON, the engine will attempt to m
 
  - key bindings/event loop
    - Moving focus
+    - establishing focus order at init
    - Widget-specific events
- - widget formatting
-   - align: left, right, center
-   - margin/size
- - widget nesting
- - widget coloring
+ -formatting and styling
+  - widget formatting
+    - align: left, right, center
+    - margin
+  - widget coloring
    - bg/foreground
    - border bg/foreground
+  - other styling
+   - reverse video
+   - emphasis?
+   - blink?
  - resizing?
- - menus - list boxes, form controls...
- - Parse text for color
+ - widget nesting
+
+ - menus - list boxes, form controls
  - Possible refactor: override_or_assign function for default json
