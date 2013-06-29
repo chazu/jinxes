@@ -60,14 +60,22 @@ class Widget(object):
         try:
             if path != None and isDict(multiIndex(self.spec, path)):
                 target = multiIndex(self.spec, path)
+                logging.debug("Specification found: ")
+                logging.debug("Key   : " + key)
+                logging.debug("path  : " + str(path))
+                logging.debug("value: " + str(target))
+                return key in target.keys()
             else:
                 target = self.spec
+                logging.debug("Specification found: ")
+                logging.debug("Key         : " + key)
+                logging.debug("equals value: " + str(value))
+                logging.debug("at spec path: " + str(path))
                 return key in target.keys() and (
                     target[key] == value if value != None else True)
         except KeyError:
-            print "WARNING: Key error when requesting path " + \
-                str(path) + " for widget " + self.name
-            target = self.spec
+            logging.debug("WARNING: Key error when requesting path " + \
+                str(path) + " for widget " + self.name)
 
     def specifies_not_equal(self, key, value):
         """
@@ -97,6 +105,9 @@ class Widget(object):
 
     def draw_line_buffer(self):
         line_start = copy(self.text_origin)
+        self.canvas.set_color_ansi(
+            self.style_value_for("contents", "fgColor"),
+            self.style_value_for("contents", "bgColor"))
         for line in self.get_visible_slice():
             self.canvas.put_str(line_start[0],
                                 line_start[1],
@@ -141,8 +152,10 @@ class Widget(object):
         self.scroll["maxCurrentLine"] = len(self.line_buffer)
 
     def text_buffer_builder(self):
-        if self.specifies("text"):
-            self.text_buffer = self.spec["text"]
+        logging.debug("Calling text buffer builder for " + self.name)
+        if self.specifies("text", path=["contents"]):
+            logging.debug("Setting text buffer for widget " + self.name)
+            self.text_buffer = self.spec["contents"]["text"]
         if self.border["present"]:
             self.text_origin = [1, 1]
         else:
