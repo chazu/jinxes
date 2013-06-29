@@ -36,7 +36,11 @@
         {
             "name": "two",
             "widget": "text",
-            "text": "hello tartan! This is some text that will need to wrap! And it works! How FUCKING cool is that? I mean, WOW! This is so crazy! I really hope that development continues to go well on this project, cos I have a lot invested in it! ZOMG! I think its important to keep it highly modular and pluggable, lets not forget that.",
+            "contents": {
+                "type": "lineBuffer",
+                "text": "hello tartan! This is some text that will need to wrap! And it works! How FUCKING cool is that? I mean, WOW! This is so crazy! I really hope that development continues to go well on this project, cos I have a lot invested in it! ZOMG! I think its important to keep it highly modular and pluggable, lets not forget that.",
+                "style": "redBlue"
+            },
             "height": 8,
             "width": 40,
             "scroll": {
