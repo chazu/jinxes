@@ -99,15 +99,21 @@ class App:
         to a format usable by the engine, i.e.
         convert color names to caca values
         """
-        logging.debug("INFO: Loading Style " + style["name"])
-        return {
+        logging.debug("Loading App Style " + style["name"])
+        color_mapped_style = {
+            "name": style["name"],
             "fgColor": App.defaultColorMap[style["fgColor"]],
             "bgColor": App.defaultColorMap[style["bgColor"]]
             }
+        logging.debug("Color mapped style:")
+        logging.debug(str(color_mapped_style))
+        return color_mapped_style
 
     def load_styles(self):
         for style in self.spec["styles"]:
-            self.process_style(style)
+            self.styles.append(self.process_style(style))
+        logging.debug("Final styles for app:")
+        logging.debug(str(self.styles))
 
     def load_keypress_hooks(self):
         for hook in self.spec["app"]["keyHooks"]:
