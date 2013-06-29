@@ -84,7 +84,7 @@ class App:
         self.keypress_queue = []
         self.event_thing = Event()
         self.quit = False
-        self.styles = {}
+        self.styles = []
 
         # Keypress hooks
         self.keypress_hooks = []
