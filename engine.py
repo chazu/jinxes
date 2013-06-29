@@ -69,7 +69,7 @@ class App:
 
     def __init__(self, filename):
         self.spec = self.load_from_file(filename)
-        self.display = TartanDisplay(self.spec["widgets"])
+        self.display = TartanDisplay(self, self.spec["widgets"])
         self.local_event_dispatch = LocalEventDispatch()
         self.digest_rate = 1000 #ms
         self.keypress_queue = []

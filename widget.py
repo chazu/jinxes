@@ -165,7 +165,8 @@ class Widget(object):
         res = res[:end]
         return res
 
-    def __init__(self, spec):
+    def __init__(self, app, spec):
+        self.app = app
         self.spec = spec
         self.width = self.spec["width"]
         self.height = self.spec["height"]

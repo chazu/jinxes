@@ -9,10 +9,11 @@ from fileparser import FileParser
 
 class TartanDisplay(object):
 
-    def __init__(self, spec):
+    def __init__(self, app, spec):
+        self.app = app
         self.spec = spec
         self.widgets = []
-        self.parser = FileParser()
+        self.parser = FileParser(self.app)
         self.widgets = self.parser.parse(self.spec)
         self.canvas = Canvas(0, 0)
         self.display = Display(self.canvas)
