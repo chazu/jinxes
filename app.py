@@ -6,6 +6,7 @@ import json
 
 from display import TartanDisplay
 from local_event_dispatch import LocalEventDispatch
+from remote_event_dispatch import RemoteEventDispatch
 
 import caca
 from caca.display import Display, DisplayError, Event
@@ -66,6 +67,12 @@ class App:
         self.load_keypress_hooks()
         self.load_styles()
 
+        # Start consuming remote messages
+
+        self.remote_messages = []
+        self.remote_dispatch = RemoteEventDispatch("tartan", self)
+        self.remote_dispatch.init_consume()
+
     def process_style(self, style):
         """
         Given a hash representing a style, convert
@@ -123,3 +130,4 @@ class App:
         while self.quit == False:
             self.display.refresh()
             self.process_events()
+            self.remote_dispatch.check_queue()
