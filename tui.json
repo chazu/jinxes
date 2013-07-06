@@ -7,6 +7,12 @@
             "fgColor": "red"
         },
         {
+            "name": "redBlueFocus",
+            "bgColor": "blue",
+            "fgColor": "red"
+            "reverse": true
+        },
+        {
             "name": "greenBlack",
             "bgColor": "black",
             "fgColor": "green"
