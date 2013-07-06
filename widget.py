@@ -118,17 +118,21 @@ class Widget(object):
         else:
             return element in style.keys() and style[element] == value
 
-    def draw_line_buffer(self):
-        line_start = copy(self.text_origin)
-        if self.style_specifies("contents", "reverse", True):
+    def set_canvas_color_per_style_for(self, style_target):
+        if self.style_specifies(style_target, "reverse", True):
             logging.debug("Inverting canvas for widget " + self.name)
             self.canvas.set_color_ansi(
-                self.style_value_for("contents", "bgColor"),
-                self.style_value_for("contents", "fgColor"))
+                self.style_value_for(style_target, "bgColor"),
+                self.style_value_for(style_target, "fgColor"))
         else:
             self.canvas.set_color_ansi(
-                self.style_value_for("contents", "fgColor"),
-                self.style_value_for("contents", "bgColor"))
+                self.style_value_for(style_target, "fgColor"),
+                self.style_value_for(style_target, "bgColor"))
+
+
+    def draw_line_buffer(self):
+        line_start = copy(self.text_origin)
+        self.set_canvas_color_per_style_for("contents")
         for line in self.get_visible_slice():
             self.canvas.put_str(line_start[0],
                                 line_start[1],
