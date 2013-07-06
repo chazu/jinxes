@@ -1,6 +1,5 @@
 import logging
-logging.basicConfig(level=logging.DEBUG)
-
+import argparse
 import sys
 import json
 
@@ -51,6 +50,18 @@ class App:
     }
 
     def __init__(self, filename):
+        self.arg_parser = argparse.ArgumentParser()
+        self.arg_parser.add_argument("--inittest",
+                                     help="Initialize app and quit",
+                                     action="store_true",
+                                     default=False)
+        self.arg_parser.add_argument("--loglevel",
+                                 help="DEBUG, INFO or WARN",
+                                 default="debug")
+        self.args = self.arg_parser.parse_args()
+
+        logging.basicConfig(level=getattr(logging, self.args.loglevel))
+
         self.spec = self.load_from_file(filename)
         self.display = TartanDisplay(self, self.spec["widgets"])
         self.local_event_dispatch = LocalEventDispatch()
@@ -127,7 +138,8 @@ class App:
 
     def run(self):
         self.display.build_display()
-        while self.quit == False:
-            self.display.refresh()
-            self.process_events()
-            self.remote_dispatch.check_queue()
+        if self.args.inittest != True:
+            while self.quit == False:
+                self.display.refresh()
+                self.process_events()
+                self.remote_dispatch.check_queue()
