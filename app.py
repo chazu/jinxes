@@ -94,8 +94,10 @@ class App:
         color_mapped_style = {
             "name": style["name"],
             "fgColor": App.defaultColorMap[style["fgColor"]],
-            "bgColor": App.defaultColorMap[style["bgColor"]]
+            "bgColor": App.defaultColorMap[style["bgColor"]],
             }
+        if "reverse" in style.keys():
+            color_mapped_style["reverse"] = style["reverse"]
         logging.debug("Color mapped style:")
         logging.debug(str(color_mapped_style))
         return color_mapped_style
