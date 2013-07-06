@@ -142,9 +142,7 @@ class Widget(object):
     def draw_border(self):
         if self.border["visible"] and self.border["present"]:
             char = self.border["character"]
-            self.canvas.set_color_ansi(
-                self.style_value_for("border", "fgColor"),
-                self.style_value_for("border", "bgColor"))
+            self.set_canvas_color_per_style_for("border")
             self.canvas.draw_box(0, 0, self.spec["width"],
                                  self.spec["height"],str(char))
 

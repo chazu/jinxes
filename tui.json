@@ -53,7 +53,7 @@
                 "scroll": true
             },
             "border": {"character": "Z",
-                       "style": "redBlue"
+                       "style": "redBlueFocus"
                       },
             "anchor": [10, 2]
         }
