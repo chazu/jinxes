@@ -83,11 +83,19 @@ class Widget(object):
         """
         return self.spec[key] != value
 
+    def get_style_for_spec_section(self, style_target):
+        """
+        Return the style hash for a section of the spec
+        such as "contents" or "border"
+        """
+        name = self.spec[style_target]["style"]
+        return filter(lambda x: x["name"] == name , self.app.styles)[0]
+
     def style_value_for(self, style_target, value):
         """
         Lookup the relevant style stored in the spec
         style_target - the portion of the widget's spec
-        which contains the style
+        which contains the style, e.g. "border"
         value - the specific style portion we want: foreground,
         background, etc.
         """
@@ -103,11 +111,20 @@ class Widget(object):
         logging.debug("got style value: " + str(color_value_for_style_element))
         return color_value_for_style_element
 
+    def style_specifies(self, style_target, element, value=None):
+        style = self.get_style_for_spec_section(style_target)
+        if value == None:
+            return element in style.keys()
+        else:
+            return element in style.keys() and style["element"] == value
+
     def draw_line_buffer(self):
         line_start = copy(self.text_origin)
         self.canvas.set_color_ansi(
             self.style_value_for("contents", "fgColor"),
             self.style_value_for("contents", "bgColor"))
+        if self.style_specifies("contents", "reverse", "true"):
+            self.canvas.invert()
         for line in self.get_visible_slice():
             self.canvas.put_str(line_start[0],
                                 line_start[1],

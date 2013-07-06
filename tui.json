@@ -9,7 +9,7 @@
         {
             "name": "redBlueFocus",
             "bgColor": "blue",
-            "fgColor": "red"
+            "fgColor": "red",
             "reverse": true
         },
         {
