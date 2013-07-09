@@ -60,23 +60,33 @@ When constructing a widget from the specified JSON, the engine will attempt to m
 
 ## TODO
 
- - key bindings/event loop
-   - Moving focus
-    - establishing focus order at init
-   - Widget-specific events
- -formatting and styling
+- key bindings/event loop/messaging & events
+  - Application-wide primitives
+    - Moving focus
+  - establishing focus order at init
+  - Widget-specific events
+-formatting and styling
   - widget formatting
     - align: left, right, center
     - margin
   - widget coloring
-   - bg/foreground
-   - border bg/foreground
+    - bg/foreground
+    - border bg/foreground
   - other styling
-   - reverse video
-   - emphasis?
-   - blink?
- - resizing?
- - widget nesting
+    - reverse video
+    - emphasis?
+  - resizing?
+  - widget nesting
+  - Widget content types -
+    - text/line buffers
+    - widgets
+    - collections (e.g. list boxes)
+  - menus - list boxes, form controls
+- Textual markup language for line/text buffers
+  - colors
+  - emphasis
+  - printf-style interpolation (data binding from within buffers?)
+  - hyperlinks?
 
- - menus - list boxes, form controls
- - Possible refactor: override_or_assign function for default json
+
+- Possible refactor: override_or_assign function for default json
