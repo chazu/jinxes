@@ -63,7 +63,7 @@ class App:
         logging.basicConfig(level=getattr(logging, self.args.loglevel))
 
         self.spec = self.load_from_file(filename)
-        self.display = TartanDisplay(self, self.spec["widgets"])
+        self.display = TartanDisplay(self, self.spec)
         self.local_event_dispatch = LocalEventDispatch()
         self.digest_rate = 1000 #ms
         self.keypress_queue = []
