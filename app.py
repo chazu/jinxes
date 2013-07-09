@@ -42,14 +42,22 @@ class App:
 
     defaultAppState = {
         "styles": defaultStyles,
-        "focus":{
-            "wrap": False
-        },
-        "size": "auto",
-        "keys": [{"q":"quitApp"}],
-    }
+        "app":
+            {
+            "keyHooks":
+                [
+                {
+                    "key": "q",
+                    "func": "quitApp"
+                    }
+                ],
+            "height": 24,
+            "width": 80
+            },
+        "widgets": []
+        }
 
-    def __init__(self, filename):
+    def __init__(self, filename=None):
         self.arg_parser = argparse.ArgumentParser()
         self.arg_parser.add_argument("--inittest",
                                      help="Initialize app and quit",
@@ -62,7 +70,9 @@ class App:
 
         logging.basicConfig(level=getattr(logging, self.args.loglevel))
 
-        self.spec = self.load_from_file(filename)
+        self.initialize_app_spec(filename)
+        print "FINAL SPEC"
+        print str(self.spec)
         self.display = TartanDisplay(self, self.spec)
         self.local_event_dispatch = LocalEventDispatch()
         self.digest_rate = 1000 #ms
@@ -113,10 +123,19 @@ class App:
             print hook
             self.register_keypress_hook(hook)
 
-    def load_from_file(self, filepath):
-        logging.debug("App loading filepath: " + str(filepath))
-        return json.load(open(filepath))
+    def initialize_default_app_spec(self):
+        logging.info("Initialized default app spec")
+        self.spec = App.defaultAppState.copy()
+        logging.debug("default spec: " + str(self.spec))
 
+    def initialize_app_spec(self, filepath):
+        self.initialize_default_app_spec()
+        if filepath != None:
+            logging.info("App loading filepath: " + str(filepath))
+            loaded_spec = json.load(open(filepath))
+            logging.debug("Loaded spec: " + str(loaded_spec))
+            self.spec.update(loaded_spec)
+            logging.debug("Updated spec: " + str(self.spec))
 
     def register_keypress_hook(self, hook):
         self.keypress_hooks.append({"key": hook["key"],
