@@ -19,6 +19,12 @@ class TartanDisplay(object):
         self.display = Display(self.canvas)
         self.display.set_driver('gl')
 
+        self.focused_widget = self.widgets[0]
+        self.build_focus_order()
+
+    def build_focus_order(self):
+        self.focus_order = self.widgets
+
     def refresh(self):
 
         self.build_display()
