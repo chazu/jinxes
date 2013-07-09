@@ -62,17 +62,20 @@ When constructing a widget from the specified JSON, the engine will attempt to m
 
 ### key bindings/event loop/messaging & events
 - Application-wide primitives
-  - Moving focus
-- establishing focus order at init
 - Widget-specific events
+  - Specify widget must be focused for event to trigger
+    {
+      "key" : "t",
+      "func": "widgetSpecificHook",
+      "requireFocus": true
+    }
 
 ### formatting and styling
+- App-wide config
+  - canvas size
 - widget formatting
   - align: left, right, center
-  - margin
-- widget coloring
-  - bg/foreground
-  - border bg/foreground
+  - margin - horizontal and vertical
 - other styling
   - reverse video
   - emphasis?

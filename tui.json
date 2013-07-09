@@ -20,6 +20,8 @@
     ],
     "app":
     {
+        "height": 24,
+        "width": 100,
         "keyHooks":
         [
             {
@@ -42,8 +44,6 @@
                 "key": "h",
                 "func": "decrementAppFocus"
             }
-
-
         ]
     },
     "widgets":
