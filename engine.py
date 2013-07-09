@@ -6,6 +6,6 @@ from app import App
 
 import hooks
 
-app = App()
+app = App("tui.json")
 
 app.run()
