@@ -14,8 +14,9 @@ class TartanDisplay(object):
         self.spec = spec
         self.widgets = []
         self.parser = FileParser(self.app)
-        self.widgets = self.parser.parse(self.spec)
-        self.canvas = Canvas(0, 0)
+        self.widgets = self.parser.parse(self.spec["widgets"])
+        self.canvas = Canvas(self.spec["app"]["width"],
+                             self.spec["app"]["height"])
         self.display = Display(self.canvas)
         self.display.set_driver('gl')
 
