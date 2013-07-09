@@ -9,6 +9,6 @@ import hooks
 app = App('tui.json')
 
 # Focused widget (should be part of app init)
-app.focused_widget = app.display.widgets[0]
+app.display.focused_widget = app.display.widgets[0]
 
 app.run()
