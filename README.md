@@ -38,6 +38,20 @@ All widgets must have the following fields:
 
 Local events triggered by the user are addressed separately from external (server) events.
 
+## Styling & Formatting
+
+Widgets can contain styling and formatting information inside the widget definition. Alternatively, styles can be specified at the app level and referenced in each widget. Currently, each widget can have only one style at a time.
+
+Style or formatting information in a style reference will override the default information for a widget
+
+### Style sample
+    {
+      "name": "sampleStyle",
+      "fgColor": "blue",
+      "bgColor": "black",
+      "reverse": true
+    }
+
 ## Internals
 
 ### Builders
