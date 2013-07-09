@@ -66,7 +66,7 @@ When constructing a widget from the specified JSON, the engine will attempt to m
   - establishing focus order at init
   - Widget-specific events
 
--formatting and styling
+- formatting and styling
   - widget formatting
     - align: left, right, center
     - margin
