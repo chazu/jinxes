@@ -72,8 +72,10 @@ When constructing a widget from the specified JSON, the engine will attempt to m
 
 ### formatting and styling
 - App-wide config
-  - canvas size
+    - Fullscreen (Useless later on but for now...)
+- Widget resizing
 - widget formatting
+  - separate color schemes and formatting styles
   - align: left, right, center
   - margin - horizontal and vertical
 - other styling
