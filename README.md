@@ -38,6 +38,20 @@ All widgets must have the following fields:
 
 Local events triggered by the user are addressed separately from external (server) events.
 
+## Styling & Formatting
+
+Widgets can contain styling and formatting information inside the widget definition. Alternatively, styles can be specified at the app level and referenced in each widget. Currently, each widget can have only one style at a time.
+
+Style or formatting information in a style reference will override the default information for a widget
+
+### Style sample
+    {
+      "name": "sampleStyle",
+      "fgColor": "blue",
+      "bgColor": "black",
+      "reverse": true
+    }
+
 ## Internals
 
 ### Builders
@@ -46,23 +60,34 @@ When constructing a widget from the specified JSON, the engine will attempt to m
 
 ## TODO
 
- - key bindings/event loop
-   - Moving focus
-    - establishing focus order at init
-   - Widget-specific events
- -formatting and styling
-  - widget formatting
-    - align: left, right, center
-    - margin
-  - widget coloring
-   - bg/foreground
-   - border bg/foreground
-  - other styling
-   - reverse video
-   - emphasis?
-   - blink?
- - resizing?
- - widget nesting
+### key bindings/event loop/messaging & events
+- Application-wide primitives
+  - Moving focus
+- establishing focus order at init
+- Widget-specific events
 
- - menus - list boxes, form controls
- - Possible refactor: override_or_assign function for default json
+### formatting and styling
+- widget formatting
+  - align: left, right, center
+  - margin
+- widget coloring
+  - bg/foreground
+  - border bg/foreground
+- other styling
+  - reverse video
+  - emphasis?
+- resizing?
+- widget nesting
+- Widget content types -
+  - text/line buffers
+  - widgets
+  - collections (e.g. list boxes)
+- menus - list boxes, form controls
+
+## Textual markup language for line/text buffers
+- colors
+- emphasis
+- printf-style interpolation (data binding from within buffers?)
+- hyperlinks?
+
+- Possible refactor: override_or_assign function for default json
