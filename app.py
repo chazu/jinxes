@@ -58,6 +58,8 @@ class App:
         }
 
     def __init__(self, filename=None):
+
+        # Parse command line arguments
         self.arg_parser = argparse.ArgumentParser()
         self.arg_parser.add_argument("--inittest",
                                      help="Initialize app and quit",
@@ -68,8 +70,10 @@ class App:
                                  default="debug")
         self.args = self.arg_parser.parse_args()
 
+        # Configure logging TODO: Use one logger object everywhere
         logging.basicConfig(level=getattr(logging, self.args.loglevel))
 
+        # Initialize Spec/State
         self.initialize_app_spec(filename)
         print "FINAL SPEC"
         print str(self.spec)

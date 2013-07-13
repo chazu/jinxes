@@ -26,19 +26,38 @@ class Widget(object):
         "currentLine": 0
         }
 
-    def specifies(self, key, value=None, path=None):
+    # Specification and lookup methods
+    # --------------------------------
+    # These methods are used to query the widget's spec
+    # or current_state, and to conveniently retrieve
+    # values from app-level styles
+
+    def get_spec_doc(self, check_against_spec):
+        """
+        Helper method.
+        Return the spec or the current state, as the situation
+        requires
+        """
+        return (self.current_state if check_against_spec == False
+                    else self.spec)
+
+    def specifies(self, key, value=None, path=None, check_against_spec=False):
         """
         Key - The key to search for
         Value - A value to check equality for
         Path - The path in the spec to search
+        check_against_state - True if you want to look at self.current_state
+        instead of self.spec
 
+        Returns ->
         True if the spec doc has the key.
         If value is passed in, True only
         if key is present and equal to value
         """
+        spec_doc = self.get_spec_doc(check_against_spec)
         try:
-            if path != None and isDict(multiIndex(self.spec, path)):
-                target = multiIndex(self.spec, path)
+            if path != None and isDict(multiIndex(spec_doc, path)):
+                target = multiIndex(spec_doc, path)
                 logging.debug("Specification found: ")
                 logging.debug("Key   : " + key)
                 logging.debug("path  : " + str(path))
@@ -55,24 +74,29 @@ class Widget(object):
         except KeyError:
             logging.debug("WARNING: Key error when requesting path " + \
                 str(path) + " for widget " + self.name)
+            return False
 
-    def specifies_not_equal(self, key, value):
+    def specifies_not_equal(self, key, value, check_against_spec=False):
         """
         True if the value is specified but not equal to given value
         """
-        return self.spec[key] != value
+        spec_doc = self.get_spec_doc(check_against_spec)
+        return spec_doc[key] != value
 
-    def get_style_for_spec_section(self, style_target):
+    def get_style_for_spec_section(self,
+                                   style_target,
+                                   check_against_spec=False):
         """
         Return the style hash for a section of the spec
         such as "contents" or "border"
         """
-        name = self.spec[style_target]["style"]
+        spec_doc = self.get_spec_doc(check_against_spec)
+        name = spec_doc[style_target]["style"]
         return filter(lambda x: x["name"] == name , self.app.styles)[0]
 
-    def style_value_for(self, style_target, value):
+    def style_value_for(self, style_target, value, check_against_spec=False):
         """
-        Lookup the relevant style stored in the spec
+        Lookup the relevant style stored in the app-level spec
         style_target - the portion of the widget's spec
         which contains the style, e.g. "border"
         value - the specific style portion we want: foreground,
@@ -80,9 +104,10 @@ class Widget(object):
         """
         # TODO We should cache these values on widget init, so we dont
         # look them up every time we draw a damn widget
-        logging.debug("Looking up style " + self.spec[style_target]["style"] \
+        spec_doc = self.get_spec_doc(check_against_spec)
+        logging.debug("Looking up style " + spec_doc[style_target]["style"] \
                           + " for target " + style_target)
-        style_name = self.spec[style_target]["style"]
+        style_name = spec_doc[style_target]["style"]
         style = filter(lambda x: x["name"] == style_name,
                        self.app.styles)[0]
         logging.debug("Got App style: " + str(style))
@@ -90,8 +115,13 @@ class Widget(object):
         logging.debug("got style value: " + str(color_value_for_style_element))
         return color_value_for_style_element
 
-    def style_specifies(self, style_target, element, value=None):
-        style = self.get_style_for_spec_section(style_target)
+    def style_specifies(self,
+                        style_target,
+                        element,
+                        value=None,
+                        check_against_spec=False):
+        style = self.get_style_for_spec_section(style_target,
+                                                check_against_spec)
         if value == None:
             return element in style.keys()
         else:
@@ -108,6 +138,9 @@ class Widget(object):
                 self.style_value_for(style_target, "fgColor"),
                 self.style_value_for(style_target, "bgColor"))
 
+    # Drawing methods
+    # ---------------------------
+    # Actual manipulation of the widget canvas goes here
 
     def draw_line_buffer(self):
         line_start = copy(self.text_origin)
@@ -134,10 +167,10 @@ class Widget(object):
     # instance state
 
     def border_builder(self):
-        if self.specifies("border") and isDict(self.spec["border"]):
-            print(str(self.spec["border"]))
+        if self.specifies("border") and isDict(self.current_state["border"]):
+            print(str(self.current_state["border"]))
             self.border = Widget.defaultBorderAttributes.copy()
-            self.border.update(self.spec["border"])
+            self.border.update(self.current_state["border"])
         else:
             self.border = Widget.defaultBorderAttributes.copy()
 
@@ -157,7 +190,7 @@ class Widget(object):
         logging.debug("Calling text buffer builder for " + self.name)
         if self.specifies("text", path=["contents"]):
             logging.debug("Setting text buffer for widget " + self.name)
-            self.text_buffer = self.spec["contents"]["text"]
+            self.text_buffer = self.current_state["contents"]["text"]
         if self.border["present"]:
             self.text_origin = [1, 1]
         else:
@@ -165,7 +198,7 @@ class Widget(object):
 
     def anchor_builder(self):
         if self.specifies("anchor"):
-            self.anchor = self.spec["anchor"]
+            self.anchor = self.current_state["anchor"]
         else:
             self.anchor = (0, 0)
 
@@ -186,7 +219,7 @@ class Widget(object):
         # set up scrolling
         if self.specifies("scroll"):
             self.scroll = Widget.defaultScrollingAttributes.copy()
-            self.scroll.update(self.spec["scroll"])
+            self.scroll.update(self.current_state["scroll"])
         else:
             self.scroll = Widget.defaultScrollingAttributes.copy()
 
@@ -203,11 +236,16 @@ class Widget(object):
         res = res[:end]
         return res
 
+    def initialize_spec_and_state(self, spec):
+        self.spec = spec
+        self.current_state = spec.copy()
+
     def __init__(self, app, spec):
         self.app = app
-        self.spec = spec
-        self.width = self.spec["width"]
-        self.height = self.spec["height"]
+        self.initialize_spec_and_state(spec)
+
+        self.width = self.current_state["width"]
+        self.height = self.current_state["height"]
         if self.specifies('name'):
             self.name = spec["name"]
         else:
@@ -219,9 +257,11 @@ class Widget(object):
         else:
             self.canvas = Canvas(0, 0)
             self.canvas.set_color_ansi(caca.COLOR_WHITE, caca.COLOR_BLACK)
-        logging.debug("Drawing widget for the first time: " + self.name)
+
+        logging.debug("Building widget for the first time: " + self.name)
         logging.debug("Spec for widget:")
         logging.debug(str(self.spec))
+
         self.anchor_builder()
         self.border_builder()
         self.scroll_builder()
