@@ -43,6 +43,14 @@
             {
                 "key": "h",
                 "func": "decrementAppFocus"
+            },
+            {
+                "key": "i",
+                "func": "maximizeFocusWidget"
+            },
+            {
+                "key": "o",
+                "func": "restoreFocusWidget"
             }
         ]
     },
