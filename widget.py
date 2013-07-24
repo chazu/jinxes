@@ -168,7 +168,6 @@ class Widget(object):
 
     def border_builder(self):
         if self.specifies("border") and isDict(self.current_state["border"]):
-            print(str(self.current_state["border"]))
             self.border = Widget.defaultBorderAttributes.copy()
             self.border.update(self.current_state["border"])
         else:
@@ -223,6 +222,15 @@ class Widget(object):
         else:
             self.scroll = Widget.defaultScrollingAttributes.copy()
 
+
+    def build_all(self):
+        self.border_builder()
+        self.line_buffer_builder()
+        self.text_buffer_builder()
+        self.anchor_builder()
+        self.visible_slice_builder()
+        self.scroll_builder()
+
     def update_scroll_current_line(self, delta):
         self.scroll["currentLine"] += int(delta)
 
@@ -237,8 +245,45 @@ class Widget(object):
         return res
 
     def initialize_spec_and_state(self, spec):
+        """
+        Spec should always be the initial spec
+        Cached state represents a layer of 'undo' if you will,
+        while current state is what is used to build and draw
+        """
         self.spec = spec
+        self.cached_state = spec.copy()
         self.current_state = spec.copy()
+
+    def resize(self, height, width):
+        # TODO Cache keys before changing them
+        self.cache_state_at_path(["width"])
+        self.cache_state_at_path(["height"])
+
+        self.current_state["width"] = width
+        self.current_state["height"] = height
+        self.canvas.set_size(width, height)
+        # TODO Mark dirty to trigger rebuild?
+
+    def move_anchor(self, row, column):
+        # TODO Cache keys before changing them
+        self.current_state["anchor"] = (row, column)
+       # TODO Mark dirty to trigger rebuild?
+
+    def cache_state_at_path(self, path_array):
+        """
+        Given a path into the current state, store the value
+        found there in the cache
+        """
+        value_to_cache = multiIndex(self.current_state, path_array)
+        print("!!!: " + str(value_to_cache))
+        multiIndexAssign(self.cached_state, path_array, value_to_cache)
+
+    def restore_state_from_cache(self, path_array):
+        """
+        Given a path into the cached state, restore the value
+        found there to the current state
+        """
+        pass
 
     def __init__(self, app, spec):
         self.app = app
@@ -258,7 +303,7 @@ class Widget(object):
             self.canvas = Canvas(0, 0)
             self.canvas.set_color_ansi(caca.COLOR_WHITE, caca.COLOR_BLACK)
 
-        logging.debug("Building widget for the first time: " + self.name)
+            logging.debug("Building widget for the first time: " + self.name)
         logging.debug("Spec for widget:")
         logging.debug(str(self.spec))
 

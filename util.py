@@ -15,6 +15,9 @@ def multiIndex(the_object, index_array):
     """
     TODO Write this docstring
     """
+    print "the object: " + str(the_object)
+    print "index array: " + str(index_array)
+    print "*" * 69
     return reduce(lambda obj, key: obj[key], index_array, the_object)
 
 def multiIndexAssign(the_object, index_array, value):
