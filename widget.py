@@ -138,9 +138,11 @@ class Widget(object):
                 self.style_value_for(style_target, "fgColor"),
                 self.style_value_for(style_target, "bgColor"))
 
+
     # Drawing methods
     # ---------------------------
     # Actual manipulation of the widget canvas goes here
+    ###############################################################
 
     def draw_line_buffer(self):
         line_start = copy(self.text_origin)
@@ -159,12 +161,20 @@ class Widget(object):
                                  self.spec["height"],str(char))
 
     def draw(self):
+        """
+        This is called once every time through the main loop.
+        Dirty widgets are rebuilt in here.
+        """
+        if self.dirty:
+            self.build_all()
+
         self.canvas.clear()
         self.draw_line_buffer()
         self.draw_border()
 
     # Builder methods - take the spec for the widget and build out
     # instance state
+    ###############################################################
 
     def border_builder(self):
         if self.specifies("border") and isDict(self.current_state["border"]):
@@ -222,14 +232,13 @@ class Widget(object):
         else:
             self.scroll = Widget.defaultScrollingAttributes.copy()
 
-
     def build_all(self):
-        self.border_builder()
-        self.line_buffer_builder()
-        self.text_buffer_builder()
         self.anchor_builder()
-        self.visible_slice_builder()
+        self.border_builder()
         self.scroll_builder()
+        self.text_buffer_builder()
+        self.line_buffer_builder()
+        self.visible_slice_builder()
 
     def update_scroll_current_line(self, delta):
         self.scroll["currentLine"] += int(delta)
@@ -262,12 +271,12 @@ class Widget(object):
         self.current_state["width"] = width
         self.current_state["height"] = height
         self.canvas.set_size(width, height)
-        # TODO Mark dirty to trigger rebuild?
+        self.app.display.mark_dirty()
 
     def move_anchor(self, row, column):
         # TODO Cache keys before changing them
         self.current_state["anchor"] = (row, column)
-       # TODO Mark dirty to trigger rebuild?
+        self.app.display.mark_dirty()
 
     def cache_state_at_path(self, path_array):
         """
@@ -285,9 +294,16 @@ class Widget(object):
         """
         pass
 
+    def mark_dirty(self):
+        self.dirty = True
+
+    def mark_clean(self):
+        self.dirty = False
+
     def __init__(self, app, spec):
         self.app = app
         self.initialize_spec_and_state(spec)
+        self.dirty = False
 
         self.width = self.current_state["width"]
         self.height = self.current_state["height"]
@@ -307,9 +323,4 @@ class Widget(object):
         logging.debug("Spec for widget:")
         logging.debug(str(self.spec))
 
-        self.anchor_builder()
-        self.border_builder()
-        self.scroll_builder()
-        self.text_buffer_builder()
-        self.line_buffer_builder()
-        self.visible_slice_builder()
+        self.build_all()
