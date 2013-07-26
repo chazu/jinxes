@@ -274,7 +274,6 @@ class Widget(object):
         self.app.display.mark_dirty()
 
     def move_anchor(self, row, column):
-        # TODO Cache keys before changing them
         self.current_state["anchor"] = (row, column)
         self.app.display.mark_dirty()
 
@@ -284,7 +283,6 @@ class Widget(object):
         found there in the cache
         """
         value_to_cache = multiIndex(self.current_state, path_array)
-        print("!!!: " + str(value_to_cache))
         multiIndexAssign(self.cached_state, path_array, value_to_cache)
 
     def restore_state_from_cache(self, path_array):
@@ -292,7 +290,8 @@ class Widget(object):
         Given a path into the cached state, restore the value
         found there to the current state
         """
-        pass
+        value_to_restore = multiIndex(self.cached_state, path_array)
+        multiIndexAssign(self.current_state, path_array, value_to_restore)
 
     def mark_dirty(self):
         self.dirty = True
