@@ -24,11 +24,17 @@ class TartanDisplay(object):
             self.focused_widget = self.widgets[0]
         self.build_focus_order()
 
+    def mark_dirty(self):
+        self.dirty = True
+
+    def mark_clean(self):
+        self.dirty = False
+
     def build_focus_order(self):
         self.focus_order = self.widgets
 
     def refresh(self):
-
+        self.canvas.clear()
         self.build_display()
         self.display.refresh()
 
