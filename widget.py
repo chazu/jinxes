@@ -62,7 +62,10 @@ class Widget(object):
                 logging.debug("Key   : " + key)
                 logging.debug("path  : " + str(path))
                 logging.debug("value: " + str(target))
-                return key in target.keys()
+                if value == None:
+                    return key in target.keys()
+                else:
+                    return target[key] == value
             else:
                 target = self.spec
                 logging.debug("Specification found: ")
@@ -72,7 +75,7 @@ class Widget(object):
                 return key in target.keys() and (
                     target[key] == value if value != None else True)
         except KeyError:
-            logging.debug("WARNING: Key error when requesting path " + \
+            logging.warn("Key error when requesting path " + \
                 str(path) + " for widget " + self.name)
             return False
 
@@ -105,14 +108,14 @@ class Widget(object):
         # TODO We should cache these values on widget init, so we dont
         # look them up every time we draw a damn widget
         spec_doc = self.get_spec_doc(check_against_spec)
-        logging.debug("Looking up style " + spec_doc[style_target]["style"] \
-                          + " for target " + style_target)
+        # logging.debug("Looking up style " + spec_doc[style_target]["style"] \
+        #                   + " for target " + style_target)
         style_name = spec_doc[style_target]["style"]
         style = filter(lambda x: x["name"] == style_name,
                        self.app.styles)[0]
-        logging.debug("Got App style: " + str(style))
+        # logging.debug("Got App style: " + str(style))
         color_value_for_style_element = style[value]
-        logging.debug("got style value: " + str(color_value_for_style_element))
+        # logging.debug("got style value: " + str(color_value_for_style_element))
         return color_value_for_style_element
 
     def style_specifies(self,
@@ -129,7 +132,6 @@ class Widget(object):
 
     def set_canvas_color_per_style_for(self, style_target):
         if self.style_specifies(style_target, "reverse", True):
-            logging.debug("Inverting canvas for widget " + self.name)
             self.canvas.set_color_ansi(
                 self.style_value_for(style_target, "bgColor"),
                 self.style_value_for(style_target, "fgColor"))
@@ -167,6 +169,7 @@ class Widget(object):
         """
         if self.dirty:
             self.build_all()
+            self.mark_clean()
 
         self.canvas.clear()
         self.draw_line_buffer()
@@ -216,9 +219,9 @@ class Widget(object):
         initialize or change visible slice
         """
         if self.border["present"]:
-            self.visible_lines = self.height - 2
+            self.visible_lines = self.current_state["height"] - 2
         else:
-            self.visible_lines = self.height
+            self.visible_lines = self.current_state["height"]
 
     def scroll_builder(self):
         """
@@ -262,6 +265,9 @@ class Widget(object):
         self.spec = spec
         self.cached_state = spec.copy()
         self.current_state = spec.copy()
+
+        self.current_state["custom"] = {}
+        self.cached_state["custom"] = {}
 
     def resize(self, height, width):
         # TODO Cache keys before changing them
@@ -318,7 +324,6 @@ class Widget(object):
             self.canvas = Canvas(0, 0)
             self.canvas.set_color_ansi(caca.COLOR_WHITE, caca.COLOR_BLACK)
 
-            logging.debug("Building widget for the first time: " + self.name)
         logging.debug("Spec for widget:")
         logging.debug(str(self.spec))
 
