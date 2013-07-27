@@ -124,7 +124,6 @@ class App:
 
     def load_keypress_hooks(self):
         for hook in self.spec["app"]["keyHooks"]:
-            print hook
             self.register_keypress_hook(hook)
 
     def initialize_default_app_spec(self):
@@ -157,7 +156,6 @@ class App:
                 key = self.event_thing.get_key_ch()
                 if key in [ord(hook["key"]) for hook in self.keypress_hooks]:
                     hook = self.get_handler_for_key(key)
-                    print hook
                     hook[0]["func"](self)
                 key=None
 
