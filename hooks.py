@@ -28,16 +28,20 @@ def decrementAppFocus(app):
 
 def maximizeFocusWidget(app):
 
-    app.display.focused_widget.cache_state_at_path(["anchor"])
-    app.display.focused_widget.cache_state_at_path(["height"])
-    app.display.focused_widget.cache_state_at_path(["width"])
+    if not app.display.focused_widget. \
+            specifies("maximized", True, ["custom"]):
+        app.display.focused_widget.cache_state_at_path(["anchor"])
+        app.display.focused_widget.cache_state_at_path(["height"])
+        app.display.focused_widget.cache_state_at_path(["width"])
 
-    app.display.focused_widget.move_anchor(0, 0)
-    app.display.focused_widget.resize(
-        app.spec["app"]["height"],
-        app.spec["app"]["width"]
-        )
-    app.display.focused_widget.mark_dirty()
+        app.display.focused_widget.move_anchor(0, 0)
+        app.display.focused_widget.resize(
+            app.spec["app"]["height"],
+            app.spec["app"]["width"]
+            )
+        app.display.focused_widget.current_state["custom"] \
+            ["maximized"] = True
+        app.display.focused_widget.mark_dirty()
 
 def restoreFocusWidget(app):
 
@@ -49,6 +53,8 @@ def restoreFocusWidget(app):
         app.display.focused_widget.current_state["height"],
         app.display.focused_widget.current_state["width"]
         )
+    app.display.focused_widget.current_state["custom"] \
+        ["maximized"] = False
 
     app.display.focused_widget.mark_dirty()
 
