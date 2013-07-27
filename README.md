@@ -62,6 +62,12 @@ Once this merge is complete, the full specification is copied to the widget inst
 
 Whenever we modify the current_state of the widget, we should mark the widget as dirty, using the mark_dirty method. This will trigger the widget to be 'rebuilt' (the current_state to be reprocessed) upon next render cycle.
 
+### Custom state
+
+Since application builders may want to add state to widgets in order to aid them in creating new types of UI behavior, by convention all such state should be namespaced under 'custom'. For example, a widget may have a boolean indicating whether it has been maximized. This would be kept at widget.current_state["custom"]["maximized"].
+
+Custom app-level state should be similarly namespaced.
+
 ### Draw methods
 
 Draw methods are what they sound like: they do all the manipulation of the wrapped caca canvas object for the widget.
@@ -81,8 +87,6 @@ Draw methods are what they sound like: they do all the manipulation of the wrapp
 ### formatting and styling
 - App-wide config
     - Fullscreen (Useless later on but for now...)
-- Widget resizing
-- Implement 'mark_dirty' and rebuilding methods
 - widget formatting
   - separate color schemes and formatting styles
   - align: left, right, center
@@ -90,7 +94,6 @@ Draw methods are what they sound like: they do all the manipulation of the wrapp
 - other styling
   - reverse video
   - emphasis?
-- resizing?
 - widget nesting
 - Widget content types -
   - text/line buffers
