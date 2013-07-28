@@ -1,0 +1,69 @@
+{
+    "styles":
+    [
+        {
+            "name": "redBlue",
+            "bgColor": "blue",
+            "fgColor": "red"
+        },
+        {
+            "name": "redBlueFocus",
+            "bgColor": "blue",
+            "fgColor": "red",
+            "reverse": true
+        },
+        {
+            "name": "greenBlack",
+            "bgColor": "black",
+            "fgColor": "green"
+        }
+    ],
+    "app":
+    {
+        "height": 24,
+        "width": 100,
+        "keyHooks":
+        [
+            {
+                "key": "q",
+                "func": "quitApp"
+            },
+            {
+                "key": "\t",
+                "func": "incrementAppFocus"
+            }
+        ]
+    },
+    "widgets":
+    [
+        {
+            "name": "Console",
+            "contents": {
+                "type": "lineBuffer",
+                "text": "",
+                "style": "greenBlack"
+            },
+            "height": 23,
+            "width": 100,
+            "scroll": {
+                "scroll": true
+            },
+            "border": {
+                "character": "X",
+                "style": "redBlueFocus"
+                      },
+            "anchor": [0, 0]
+        },
+        {
+            "name": "Input",
+            "contents": {
+                "type": "lineBuffer",
+                "text": "",
+                "style": "redBlue"
+            },
+            "height": 1,
+            "width": 100,
+            "anchor": [0, 23]
+        }
+    ]
+}
