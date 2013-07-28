@@ -58,20 +58,20 @@ class Widget(object):
         try:
             if path != None and isDict(multiIndex(spec_doc, path)):
                 target = multiIndex(spec_doc, path)
-                logging.debug("Specification found: ")
-                logging.debug("Key   : " + key)
-                logging.debug("path  : " + str(path))
-                logging.debug("value: " + str(target))
+                # logging.debug("Specification found: ")
+                # logging.debug("Key   : " + key)
+                # logging.debug("path  : " + str(path))
+                # logging.debug("value: " + str(target))
                 if value == None:
                     return key in target.keys()
                 else:
                     return target[key] == value
             else:
                 target = self.spec
-                logging.debug("Specification found: ")
-                logging.debug("Key         : " + key)
-                logging.debug("equals value: " + str(value))
-                logging.debug("at spec path: " + str(path))
+                # logging.debug("Specification found: ")
+                # logging.debug("Key         : " + key)
+                # logging.debug("equals value: " + str(value))
+                # logging.debug("at spec path: " + str(path))
                 return key in target.keys() and (
                     target[key] == value if value != None else True)
         except KeyError:
@@ -199,9 +199,9 @@ class Widget(object):
         self.scroll["maxCurrentLine"] = len(self.line_buffer)
 
     def text_buffer_builder(self):
-        logging.debug("Calling text buffer builder for " + self.name)
+        # logging.debug("Calling text buffer builder for " + self.name)
         if self.specifies("text", path=["contents"]):
-            logging.debug("Setting text buffer for widget " + self.name)
+            # logging.debug("Setting text buffer for widget " + self.name)
             self.text_buffer = self.current_state["contents"]["text"]
         if self.current_state["border"]["present"]:
             self.text_origin = [1, 1]
