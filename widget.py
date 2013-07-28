@@ -156,7 +156,7 @@ class Widget(object):
             line_start[1] += 1
 
     def draw_border(self):
-        if self.border["visible"] and self.border["present"]:
+        if self.specifies("border"):
             char = self.border["character"]
             self.set_canvas_color_per_style_for("border")
             self.canvas.draw_box(0, 0, self.current_state["width"],
@@ -193,7 +193,7 @@ class Widget(object):
 
         Call this after resize
         """
-        draw_width = (self.current_state["width"] - 2 if self.current_state["border"]["present"] == True else self.width)
+        draw_width = (self.current_state["width"] - 2 if self.specifies("border") else self.width)
         self.line_buffer = chunks(self.text_buffer, draw_width)
         # Dont allow scrolling beyond end of line buffer
         self.scroll["maxCurrentLine"] = len(self.line_buffer)
@@ -203,7 +203,7 @@ class Widget(object):
         if self.specifies("text", path=["contents"]):
             # logging.debug("Setting text buffer for widget " + self.name)
             self.text_buffer = self.current_state["contents"]["text"]
-        if self.current_state["border"]["present"]:
+        if self.specifies("border"):
             self.text_origin = [1, 1]
         else:
             self.text_origin = [0, 0]
