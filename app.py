@@ -149,14 +149,27 @@ class App:
         res = filter(lambda hook: ord(hook["key"]) == key, self.keypress_hooks)
         return res
 
+    def get_focused_widget_handler_for_key(self, key):
+        pass
+
+    def keyhook_keys(self):
+        """
+        Return a list containing all the keys that have hooks
+        """
+        return [ord(hook["key"]) for hook in self.keypress_hooks]
+
     def process_events(self):
         if self.display.display.get_event(caca.EVENT_KEY_PRESS, self.event_thing, self.digest_rate):
             if self.event_thing.get_type() == caca.EVENT_KEY_PRESS:
-
                 key = self.event_thing.get_key_ch()
-                if key in [ord(hook["key"]) for hook in self.keypress_hooks]:
+                if key in self.keyhook_keys():
                     hook = self.get_handler_for_key(key)
                     hook[0]["func"](self)
+                # Else if the focused widget has whenFocusedHooks, check it
+                # Else check catch-all hooks for focused widget ("*")
+                # Else check regular widget hooks
+                # Else run unhandled_input hook
+
                 key=None
 
     def run(self):
