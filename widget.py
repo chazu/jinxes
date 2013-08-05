@@ -41,6 +41,27 @@ class Widget(object):
         return (self.current_state if check_against_spec == False
                     else self.spec)
 
+    # TODO - the below two methods need to be reeeefactored!
+    def get_keyhook_for(self, key):
+        res = filter(lambda x: x["key"] == key,
+                     self.current_state["keyHooks"])
+        if len(res) > 0:
+            res = res[0]
+            res["widget"] = self
+        else:
+            res = None
+        return res
+
+    def get_focused_keyhook_for(self, key):
+        res = filter(lambda x: x["key"] == key,
+                     self.current_state["focusedKeyHooks"])
+        if len(res) > 0:
+            res = res[0]
+            res["widget"] = self
+        else:
+            res = None
+        return res
+
     def specifies(self, key, value=None, path=None, check_against_spec=False):
         """
         Key - The key to search for
