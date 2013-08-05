@@ -63,7 +63,13 @@
             },
             "height": 1,
             "width": 100,
-            "anchor": [0, 23]
+            "anchor": [0, 23],
+            "keyHooks": [
+                {
+                    "key": "p",
+                    "func": "printFoo"
+                }
+            ]
         }
     ]
 }

@@ -46,10 +46,13 @@ class Widget(object):
         res = filter(lambda x: x["key"] == key,
                      self.current_state["keyHooks"])
         if len(res) > 0:
-            res = res[0]
+            res = res[0].copy()
             res["widget"] = self
         else:
             res = None
+        print "RES"
+        print str(res)
+
         return res
 
     def get_focused_keyhook_for(self, key):
@@ -284,9 +287,31 @@ class Widget(object):
         while current state is what is used to build and draw
         """
         self.spec = spec
-        self.cached_state = spec.copy()
-        self.current_state = spec.copy()
+        copy_of_spec = spec.copy()
 
+        ## Initialize focused keyhooks
+        if self.specifies("focusedKeyHooks", check_against_spec=True):
+            copy_of_spec["focusedKeyHooks"] = self.spec["focusedKeyHooks"]
+        else:
+            copy_of_spec["focusedKeyHooks"] = []
+        ##########################################################
+        # TODO: we need to decide whether we're iterating through
+        # TODO: all keyhooks on registration and changing func names
+        # TODO: to func references.
+        # TODO: Currently this is what we're doing for app hooks,
+        # TODO: but we need to be uniform across widget hooks as well
+        ##########################################################
+
+        ## Initialize keyhooks
+        if self.specifies("keyHooks", check_against_spec=True):
+            copy_of_spec["keyHooks"] = self.spec["keyHooks"]
+        else:
+            copy_of_spec["keyHooks"] = []
+
+        self.cached_state = copy_of_spec
+        self.current_state = copy_of_spec
+
+        # Set up namespace for hooks to save state on widget
         self.current_state["custom"] = {}
         self.cached_state["custom"] = {}
 

@@ -59,3 +59,9 @@ def restoreFocusWidget(app):
     app.display.focused_widget.mark_dirty()
 
 #########################################################
+
+def printWidgetSpec(widget):
+    print(widget.spec)
+
+def printFoo(widget):
+    raise Exception
