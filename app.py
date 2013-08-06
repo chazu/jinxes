@@ -148,11 +148,14 @@ class App:
         res = filter(lambda hook: ord(hook["key"]) == key, self.keypress_hooks)
         return res
 
-    def keyhook_keys(self):
+    def get_widget_hook_for_key(self, key):
         """
-        Return a list containing all the keys that have hooks
+        Return the widget and relevant hook for the key
         """
-        return [ord(hook["key"]) for hook in self.keypress_hooks]
+        res = [widget.get_keyhook_for(key) for widget in self.display.widgets]
+        res = filter(lambda x: x != None,
+                     res)
+        return res[0] if len(res) > 0 else None
 
     def get_focused_widget_hook_for_key(self, key):
         """
@@ -162,13 +165,6 @@ class App:
 
     def get_focused_widget_catchall_hook(self):
         return self.display.focused_widget.get_focused_keyhook_for("ALL")
-
-    def get_widget_hook_for_key(self, key):
-        """
-        Return the widget and relevant hook for the key
-        """
-        res = [widget.get_keyhook_for(key) for widget in self.display.widgets]
-        return res[0] if len(res) > 0 else None
 
     def get_hook_for_key(self, key):
         """
@@ -186,28 +182,28 @@ class App:
         if self.display.display.get_event(caca.EVENT_KEY_PRESS, self.event_thing, self.digest_rate):
             if self.event_thing.get_type() == caca.EVENT_KEY_PRESS:
                 key = chr(self.event_thing.get_key_ch())
-                print "For key: " + key
+
                 hook = self.get_hook_for_key(key)
-                if hook:
-                    print hook
+                if hook != None:
                     hook["func"](self)
                 else:
-                    print "NO APP HOOKS, TRYING WIDGETS"
+                    print "NO APP HOOKS, TRYING FOCUSED WIDGET"
                     hook = self.get_focused_widget_hook_for_key(key)
-                    if hook:
+                    if hook != None:
                         hook["func"](hook["widget"])
                         # Execute hook for widget
                     else:
                         print "NO FOCUSED WIDGET HOOKS, TRYING REGS"
                         hook = self.get_widget_hook_for_key(key)
-                        if hook:
-                            print "BALLS"
+
+                        if hook != None:
                             # execute the hook
                             hook["func"](hook["widget"])
                         else:
                             print "NO REGS TRYING CATCHALL"
                             hook = self.get_focused_widget_catchall_hook()
-                            if hook:
+                            if hook != None:
+                                print "HOOK FOUND!"
                                 hook["func"](hook["widget"])
                 # TODO: Else run unhandled_input hook
                 key=None # Reset key

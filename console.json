@@ -69,6 +69,12 @@
                     "key": "p",
                     "func": "printFoo"
                 }
+            ],
+            "focusedKeyHooks": [
+                {
+                    "key": "ALL",
+                    "func": "printWidgetSpec"
+                }
             ]
         }
     ]

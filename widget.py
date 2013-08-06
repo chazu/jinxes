@@ -6,6 +6,7 @@ import caca
 from caca.canvas import Canvas, CanvasError
 from caca.display import Display, DisplayError, Event
 
+import hooks
 from util import *
 
 class Widget(object):
@@ -50,9 +51,6 @@ class Widget(object):
             res["widget"] = self
         else:
             res = None
-        print "RES"
-        print str(res)
-
         return res
 
     def get_focused_keyhook_for(self, key):
@@ -280,6 +278,10 @@ class Widget(object):
         res = res[:end]
         return res
 
+    def register_keypress_hook(self, hook):
+        func = getattr(hooks, hook["func"])
+        hook["func"] = getattr(hooks, hook["func"])
+
     def initialize_spec_and_state(self, spec):
         """
         Spec should always be the initial spec
@@ -287,29 +289,22 @@ class Widget(object):
         while current state is what is used to build and draw
         """
         self.spec = spec
-        copy_of_spec = spec.copy()
-
         ## Initialize focused keyhooks
         if self.specifies("focusedKeyHooks", check_against_spec=True):
-            copy_of_spec["focusedKeyHooks"] = self.spec["focusedKeyHooks"]
+            for hook in self.spec["focusedKeyHooks"]:
+                self.register_keypress_hook(hook)
         else:
-            copy_of_spec["focusedKeyHooks"] = []
-        ##########################################################
-        # TODO: we need to decide whether we're iterating through
-        # TODO: all keyhooks on registration and changing func names
-        # TODO: to func references.
-        # TODO: Currently this is what we're doing for app hooks,
-        # TODO: but we need to be uniform across widget hooks as well
-        ##########################################################
+            self.spec["focusedKeyHooks"] = []
 
         ## Initialize keyhooks
         if self.specifies("keyHooks", check_against_spec=True):
-            copy_of_spec["keyHooks"] = self.spec["keyHooks"]
+            for hook in self.spec["keyHooks"]:
+                self.register_keypress_hook(hook)
         else:
-            copy_of_spec["keyHooks"] = []
+            self.spec["keyHooks"] = []
 
-        self.cached_state = copy_of_spec
-        self.current_state = copy_of_spec
+        self.cached_state = copy(self.spec)
+        self.current_state = copy(self.spec)
 
         # Set up namespace for hooks to save state on widget
         self.current_state["custom"] = {}
