@@ -141,8 +141,7 @@ class App:
             logging.debug("Updated spec: " + str(self.spec))
 
     def register_keypress_hook(self, hook):
-        self.keypress_hooks.append({"key": hook["key"],
-                                    "func": getattr(hooks, hook["func"])})
+        hook["func"] = getattr(hooks, hook["func"])
 
     def get_handler_for_key(self, key):
         print key
@@ -176,7 +175,7 @@ class App:
         Get app hook for key
         """
         res = filter(lambda x: x["key"] == key,
-                     self.keypress_hooks)
+                     self.spec["app"]["keyHooks"])
         if len(res) > 0:
             res = res[0]
         else:
