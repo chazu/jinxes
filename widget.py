@@ -223,7 +223,6 @@ class Widget(object):
     def text_buffer_builder(self):
         # logging.debug("Calling text buffer builder for " + self.name)
         if self.specifies("text", path=["contents"]):
-            # logging.debug("Setting text buffer for widget " + self.name)
             self.text_buffer = self.current_state["contents"]["text"]
         if self.specifies("border"):
             self.text_origin = [1, 1]
@@ -240,7 +239,7 @@ class Widget(object):
         """
         initialize or change visible slice
         """
-        if self.border["present"]:
+        if self.specifies("border"):
             self.visible_lines = self.current_state["height"] - 2
         else:
             self.visible_lines = self.current_state["height"]
@@ -311,18 +310,17 @@ class Widget(object):
         self.cached_state["custom"] = {}
 
     def resize(self, height, width):
-        # TODO Cache keys before changing them
         self.cache_state_at_path(["width"])
         self.cache_state_at_path(["height"])
 
         self.current_state["width"] = width
         self.current_state["height"] = height
         self.canvas.set_size(width, height)
-        self.app.display.mark_dirty()
+        self.mark_dirty()
 
     def move_anchor(self, row, column):
         self.current_state["anchor"] = (row, column)
-        self.app.display.mark_dirty()
+        self.mark_dirty()
 
     def cache_state_at_path(self, path_array):
         """
@@ -342,6 +340,7 @@ class Widget(object):
 
     def mark_dirty(self):
         self.dirty = True
+        self.app.display.mark_dirty()
 
     def mark_clean(self):
         self.dirty = False
