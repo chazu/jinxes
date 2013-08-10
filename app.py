@@ -197,7 +197,7 @@ class App:
                         else:
                             hook = self.get_focused_widget_catchall_hook()
                             if hook != None:
-                                hook["func"](hook["widget"])
+                                hook["func"](hook["widget"], key=key)
                 # TODO: Else run unhandled_input hook
                 key=None # Reset key
 
