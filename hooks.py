@@ -62,7 +62,6 @@ def restoreFocusWidget(app, **kwargs):
 
 def appendKeyToTextBuffer(widget, **kwargs):
     widget.current_state["contents"]["text"] += kwargs["key"]
-    print widget.current_state["contents"]
     widget.mark_dirty()
 
 def printKey(widget, **kwargs):
