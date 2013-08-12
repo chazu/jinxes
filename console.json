@@ -72,6 +72,12 @@
                     "key": "ALL",
                     "func": "appendKeyToTextBuffer"
                 }
+            ],
+            "remoteMessageHooks": [
+                {
+                    "queue": "rcon",
+                    "hook": "appendBodyToTextBuffer"
+                }
             ]
         }
     ]
