@@ -59,6 +59,7 @@ def restoreFocusWidget(app, **kwargs):
     app.display.focused_widget.mark_dirty()
 
 #########################################################
+# WIDGET HOOKS
 
 def appendKeyToTextBuffer(widget, **kwargs):
     widget.current_state["contents"]["text"] += kwargs["key"]
@@ -66,3 +67,10 @@ def appendKeyToTextBuffer(widget, **kwargs):
 
 def printKey(widget, **kwargs):
     print(kwargs["key"])
+
+#########################################################
+# MESSAGE HOOKS
+
+def appendBodyToTextBuffer(widget, **kwargs):
+    widget.current_state["contents"]["text"] += kwargs["message"]
+    widget.mark_dirty()
