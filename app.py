@@ -178,7 +178,7 @@ class App:
             res = None
         return res
 
-    def process_events(self):
+    def process_keypresses(self):
         if self.display.display.get_event(caca.EVENT_KEY_PRESS, self.event_thing, self.digest_rate):
             if self.event_thing.get_type() == caca.EVENT_KEY_PRESS:
                 key = chr(self.event_thing.get_key_ch())
@@ -213,5 +213,5 @@ class App:
         if self.args.inittest != True:
             while self.quit == False:
                 self.display.refresh()
-                self.process_events()
+                self.process_keypresses()
                 self.remote_dispatch.check_queue()
