@@ -22,6 +22,10 @@
     {
         "height": 25,
         "width": 101,
+        "remoteEvents":
+        {
+            "queues": ["rcon"]
+        },
         "keyHooks":
         [
             {
