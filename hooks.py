@@ -1,32 +1,32 @@
 ## Keypress Functions ###################################
 
-def quitApp(app):
+def quitApp(app, **kwargs):
     app.quit = True
 
-def scrollFocusDown(app):
+def scrollFocusDown(app, **kwargs):
     if (app.display.focused_widget.scroll["currentLine"] <
         app.display.focused_widget.scroll["maxCurrentLine"]):
         app.display.focused_widget.scroll["currentLine"] += 1
 
-def scrollFocusUp(app):
+def scrollFocusUp(app, **kwargs):
     if (app.display.focused_widget.scroll["currentLine"] > 0):
         app.display.focused_widget.scroll["currentLine"] -= 1
 
-def incrementAppFocus(app):
+def incrementAppFocus(app, **kwargs):
     app.display.focused_widget = app.display.focus_order[ \
         (app.display.focus_order.index(
                 app.display.focused_widget
                 ) + 1) % len(app.display.focus_order)
         ]
 
-def decrementAppFocus(app):
+def decrementAppFocus(app, **kwargs):
     app.display.focused_widget = app.display.focus_order[ \
         (app.display.focus_order.index(
                 app.display.focused_widget
                 ) + 2) % len(app.display.focus_order)
         ]
 
-def maximizeFocusWidget(app):
+def maximizeFocusWidget(app, **kwargs):
 
     if not app.display.focused_widget. \
             specifies("maximized", True, ["custom"]):
@@ -43,7 +43,7 @@ def maximizeFocusWidget(app):
             ["maximized"] = True
         app.display.focused_widget.mark_dirty()
 
-def restoreFocusWidget(app):
+def restoreFocusWidget(app, **kwargs):
 
     app.display.focused_widget.restore_state_from_cache(["anchor"])
     app.display.focused_widget.restore_state_from_cache(["height"])
@@ -60,8 +60,9 @@ def restoreFocusWidget(app):
 
 #########################################################
 
-def printWidgetSpec(widget):
-    print(widget.spec)
+def appendKeyToTextBuffer(widget, **kwargs):
+    widget.current_state["contents"]["text"] += kwargs["key"]
+    widget.mark_dirty()
 
-def printFoo(widget):
-    raise Exception
+def printKey(widget, **kwargs):
+    print(kwargs["key"])

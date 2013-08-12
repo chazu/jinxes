@@ -75,8 +75,6 @@ class App:
 
         # Initialize Spec/State
         self.initialize_app_spec(filename)
-        print "FINAL SPEC"
-        print str(self.spec)
         self.display = TartanDisplay(self, self.spec)
         self.local_event_dispatch = LocalEventDispatch()
         self.digest_rate = 1000 #ms
@@ -144,7 +142,6 @@ class App:
         hook["func"] = getattr(hooks, hook["func"])
 
     def get_handler_for_key(self, key):
-        print key
         res = filter(lambda hook: ord(hook["key"]) == key, self.keypress_hooks)
         return res
 
@@ -187,24 +184,20 @@ class App:
                 if hook != None:
                     hook["func"](self)
                 else:
-                    print "NO APP HOOKS, TRYING FOCUSED WIDGET"
                     hook = self.get_focused_widget_hook_for_key(key)
                     if hook != None:
                         hook["func"](hook["widget"])
                         # Execute hook for widget
                     else:
-                        print "NO FOCUSED WIDGET HOOKS, TRYING REGS"
                         hook = self.get_widget_hook_for_key(key)
 
                         if hook != None:
                             # execute the hook
                             hook["func"](hook["widget"])
                         else:
-                            print "NO REGS TRYING CATCHALL"
                             hook = self.get_focused_widget_catchall_hook()
                             if hook != None:
-                                print "HOOK FOUND!"
-                                hook["func"](hook["widget"])
+                                hook["func"](hook["widget"], key=key)
                 # TODO: Else run unhandled_input hook
                 key=None # Reset key
 
