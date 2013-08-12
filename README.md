@@ -38,6 +38,16 @@ All widgets must have the following fields:
 
 Local events triggered by the user are addressed separately from external (server) events.
 
+### Remote event dispatches
+
+The remote event dispatch provides an abstraction layer between the app and any netcode which may be asynchronously sending and receiving messages which affecting app state.
+
+Although the API was designed with AMQP in mind as the means of message brokering, we have tried to keep things generic.
+
+The remote event dispatch exposes a number of queues to the application. Once during each app cycle, queues with registered event handlers are checked for new messages. Upon receipt of a new message, the relevant handler is called with either the app object or widget as well as the message. The hook does the rest.
+
+The default implementation included allows for queues to be declared by the app at runtime. This means the burden of setting up the AMQP entities is on the APP implementor. In future we hope to implement a trust feature such that it will be possible to restrict applications from creating or modifying AMQP entities, instead allowing only the use of those entities established by the host application.
+
 ## Styling & Formatting
 
 Widgets can contain styling and formatting information inside the widget definition. Alternatively, styles can be specified at the app level and referenced in each widget. Currently, each widget can have only one style at a time.
