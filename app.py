@@ -44,15 +44,19 @@ class App:
         "styles": defaultStyles,
         "app":
             {
-            "keyHooks":
-                [
+                "remoteMessages":
                 {
-                    "key": "q",
-                    "func": "quitApp"
+                    "queues": []
+                },
+                "keyHooks":
+                [
+                    {
+                        "key": "q",
+                        "func": "quitApp"
                     }
                 ],
-            "height": 24,
-            "width": 80
+                "height": 24,
+                "width": 80
             },
         "widgets": []
         }
@@ -89,12 +93,17 @@ class App:
         # Parse spec
         self.load_keypress_hooks()
         self.load_styles()
+        self.load_remote_queues()
 
         # Start consuming remote messages
 
         self.remote_messages = []
         self.remote_dispatch = RemoteEventDispatch("tartan", self)
         self.remote_dispatch.init_consume()
+
+    def load_remote_queues(self):
+        for queue in self.spec:
+            pass
 
     def process_style(self, style):
         """
@@ -174,6 +183,9 @@ class App:
         else:
             res = None
         return res
+
+    def process_remote_messages(self):
+        pass
 
     def process_keypresses(self):
         if self.display.display.get_event(caca.EVENT_KEY_PRESS, self.event_thing, self.digest_rate):
