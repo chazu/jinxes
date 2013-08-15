@@ -9,7 +9,7 @@ from fileparser import FileParser
 
 class TartanDisplay(object):
 
-    def __init__(self, app, spec):
+    def __init__(self, app, spec, driver='gl'):
         self.app = app
         self.spec = spec
         self.widgets = []
@@ -18,7 +18,7 @@ class TartanDisplay(object):
         self.canvas = Canvas(self.spec["app"]["width"],
                              self.spec["app"]["height"])
         self.display = Display(self.canvas)
-        self.display.set_driver('gl')
+        self.display.set_driver(driver)
 
         if len(self.widgets) > 0:
             self.focused_widget = self.widgets[0]
