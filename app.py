@@ -72,6 +72,8 @@ class App:
         self.arg_parser.add_argument("--loglevel",
                                  help="DEBUG, INFO or WARN",
                                  default="debug")
+        self.arg_parser.add_argument("--driver",
+                                     help="Select display driver: gl, curses, slang")
         self.args = self.arg_parser.parse_args()
 
         # Configure logging TODO: Use one logger object everywhere
@@ -79,7 +81,10 @@ class App:
 
         # Initialize Spec/State
         self.initialize_app_spec(filename)
-        self.display = TartanDisplay(self, self.spec)
+        if self.arg_parser.driver:
+            self.display = TartanDisplay(self, self.spec, self.arg_parser.driver)
+        else:
+            self.display = TartanDisplay(self, self.spec)
         self.local_event_dispatch = LocalEventDispatch()
         self.digest_rate = 1000 #ms
         self.keypress_queue = []
