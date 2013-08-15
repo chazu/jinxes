@@ -6,6 +6,7 @@ import json
 from display import TartanDisplay
 from local_event_dispatch import LocalEventDispatch
 from remote_event_dispatch import RemoteEventDispatch
+from util import *
 
 import caca
 from caca.display import Display, DisplayError, Event
@@ -61,6 +62,24 @@ class App:
         "widgets": []
         }
 
+    def specifies(self, key, value=None, path=None):
+        spec_doc = self.spec
+        try:
+            if path != None and isDict(multiIndex(spec_doc, path)):
+                target = multiIndex(spec_doc, path)
+                if value == None:
+                    return key in target.keys()
+                else:
+                    return target[key] == value
+            else:
+                target = self.spec
+                return key in target.keys() and (
+                    target[key] == value if value != None else True)
+        except KeyError:
+            logging.warn("Key error when requesting path " + \
+                str(path) + " for widget " + self.name)
+            return False
+
     def __init__(self, filename=None):
 
         # Parse command line arguments
@@ -93,13 +112,12 @@ class App:
         # Parse spec
         self.load_keypress_hooks()
         self.load_styles()
-        self.load_remote_queues()
 
-        # Start consuming remote messages
-
-        self.remote_messages = []
-        self.remote_dispatch = RemoteEventDispatch("tartan", self)
-        self.remote_dispatch.init_consume()
+        # Initialize network connection
+        if self.specifies("network", True):
+            self.remote_messages = []
+            self.remote_dispatch = RemoteEventDispatch(self)
+            self.remote_dispatch.init_consume()
 
     def load_remote_queues(self):
         for queue in self.spec:
@@ -185,7 +203,8 @@ class App:
         return res
 
     def process_remote_messages(self):
-        pass
+        for message in self.remote_messages:
+            print message
 
     def process_keypresses(self):
         if self.display.display.get_event(caca.EVENT_KEY_PRESS, self.event_thing, self.digest_rate):
@@ -219,4 +238,6 @@ class App:
             while self.quit == False:
                 self.display.refresh()
                 self.process_keypresses()
-                self.remote_dispatch.check_queue()
+                if self.specifies("network", True):
+                    self.process_remote_messages()
+                    self.remote_dispatch.check_queue()
