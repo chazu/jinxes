@@ -1,58 +1,30 @@
 # TARTENGINE
 
+TARTENGINE is a text-based application framework. Applications are specified using a declarative JSON structure, which is interpreted at runtime by the application engine. Application-level logic can be added to an application through the use of hooks.
+
 ## Syntax
-
-The TARTENGINE uses json documents to define user interfaces, including widget appearance, layout and data sources.
-JSON files can contain one or more widgets, i.e. the document root can be an object describing a single widget, or a list of widgets.
-
-### Nesting Widgets
-
-Widgets can be nested within other widgets. Child widgets should be contained within the "children" key of their parent widget.
-
-### Required Widget Fields
-
-All widgets must have the following fields:
-    - NONE SO FAR
-
-### Optional widget fields
-
-    - Border  - Boolean
-    - Height - Integer
-    - Width - Integer
-    - Text - Text to be shown in the widget
-    - Name - A name for the widget (unused currently)
-    - widget - The type of widget
-
-#### Border Options
-
-     NOTE: This is currently unimplemented.
-
-     { character : "X",
-       bgColor: "RED",
-       fgColor: "BLUE",
-     }
 
 ## Events
 
-### User event handling
+There are currently three types of event in the system:
 
-Local events triggered by the user are addressed separately from external (server) events.
+### Keypress events
+### Local events
+### Remote events
 
-### Remote event dispatches
+### Remote event dispatch
 
-The remote event dispatch provides an abstraction layer between the app and any netcode which may be asynchronously sending and receiving messages which affecting app state.
+The remote event dispatch provides an interface between the app and any netcode which may be asynchronously sending and receiving messages which affecting app state.
 
 Although the API was designed with AMQP in mind as the means of message brokering, we have tried to keep things generic.
 
-The remote event dispatch exposes a number of queues to the application. Once during each app cycle, queues with registered event handlers are checked for new messages. Upon receipt of a new message, the relevant handler is called with either the app object or widget as well as the message. The hook does the rest.
-
-The default implementation included allows for queues to be declared by the app at runtime. This means the burden of setting up the AMQP entities is on the APP implementor. In future we hope to implement a trust feature such that it will be possible to restrict applications from creating or modifying AMQP entities, instead allowing only the use of those entities established by the host application.
+The default dispatch establishes a connection with an AMQP server and creates an exclusive queue with which the broker can notify the client of events. Additional queues can be implemented at the application level.
 
 ## Styling & Formatting
 
 Widgets can contain styling and formatting information inside the widget definition. Alternatively, styles can be specified at the app level and referenced in each widget. Currently, each widget can have only one style at a time.
 
-Style or formatting information in a style reference will override the default information for a widget
+Style or formatting information in a style reference will override the default information for a widget.
 
 ### Style sample
     {
