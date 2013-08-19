@@ -126,10 +126,6 @@ class App:
             self.remote_dispatch = RemoteEventDispatch(self)
             self.remote_dispatch.init_consume()
 
-    def load_remote_queues(self):
-        for queue in self.spec:
-            pass
-
     def process_style(self, style):
         """
         Given a hash representing a style, convert
@@ -211,7 +207,12 @@ class App:
 
     def process_remote_messages(self):
         for message in self.remote_messages:
-            print message
+            for widget in self.display.widgets:
+                message_dict = json.loads(message)
+                hook = widget.get_remote_message_hook_for_channel(message_dict["channel"])
+                if hook:
+                    hook["func"](widget, message=message_dict["message"], channel=message_dict["channel"])
+            self.remote_messages.remove(message)
 
     def process_keypresses(self):
         if self.display.display.get_event(caca.EVENT_KEY_PRESS, self.event_thing, self.digest_rate):
