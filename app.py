@@ -245,6 +245,6 @@ class App:
             while self.quit == False:
                 self.display.refresh()
                 self.process_keypresses()
-                if self.specifies("network", True):
+                if self.specifies("network", True, ["app"]):
                     self.process_remote_messages()
                     self.remote_dispatch.check_queue()
