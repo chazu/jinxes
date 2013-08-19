@@ -120,8 +120,8 @@ class App:
         self.load_keypress_hooks()
         self.load_styles()
 
-        # Initialize network connection
-        if self.specifies("network", True):
+        # Initialize network connection IF specified
+        if self.specifies("network", True, ["app"]):
             self.remote_messages = []
             self.remote_dispatch = RemoteEventDispatch(self)
             self.remote_dispatch.init_consume()
