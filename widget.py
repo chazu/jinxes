@@ -42,6 +42,18 @@ class Widget(object):
         return (self.current_state if check_against_spec == False
                     else self.spec)
 
+    def get_remote_message_hook_for_channel(self, channel_name):
+        res = filter(lambda x: x["channel"] == channel_name,
+               self.current_state["remoteMessageHooks"])
+        if len(res) > 0:
+            res = res[0].copy()
+            res["widget"] = self
+        else:
+            res = None
+        if res != None:
+            print res
+        return res
+
     # TODO - the below two methods need to be reeeefactored!
     def get_keyhook_for(self, key):
         res = filter(lambda x: x["key"] == key,
@@ -281,6 +293,10 @@ class Widget(object):
         func = getattr(hooks, hook["func"])
         hook["func"] = getattr(hooks, hook["func"])
 
+    def register_remote_message_hook(self, hook):
+        func = getattr(hooks, hook["func"])
+        hook["func"] = getattr(hooks, hook["func"])
+
     def initialize_spec_and_state(self, spec):
         """
         Spec should always be the initial spec
@@ -301,6 +317,12 @@ class Widget(object):
                 self.register_keypress_hook(hook)
         else:
             self.spec["keyHooks"] = []
+
+        if self.specifies("remoteMessageHooks", check_against_spec=True):
+            for hook in self.spec["remoteMessageHooks"]:
+                self.register_remote_message_hook(hook)
+        else:
+            self.spec["remoteMessageHooks"] = []
 
         self.cached_state = copy(self.spec)
         self.current_state = copy(self.spec)
