@@ -20,12 +20,10 @@
     ],
     "app":
     {
+        "network": true,
         "height": 25,
         "width": 101,
-        "remoteEvents":
-        {
-            "queues": ["rcon"]
-        },
+        "remoteMessageHooks": [],
         "keyHooks":
         [
             {
@@ -53,6 +51,12 @@
                 "scroll": true
             },
             "anchor": [0, 0],
+            "remoteMessageHooks": [
+                {
+                    "channel": "rcon",
+                    "func": "appendBodyToTextBuffer"
+                }
+            ],
             "focusedKeyHooks": [
                 {
                     "key": "ALL",
@@ -77,12 +81,7 @@
                     "func": "appendKeyToTextBuffer"
                 }
             ],
-            "remoteMessageHooks": [
-                {
-                    "queue": "rcon",
-                    "hook": "appendBodyToTextBuffer"
-                }
-            ]
+            "remoteMessageHooks": []
         }
     ]
 }
