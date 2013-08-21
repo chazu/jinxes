@@ -8,9 +8,17 @@ TARTENGINE is a text-based application framework. Applications are specified usi
 
 There are currently three types of event in the system:
 
-### Keypress events
-### Local events
-### Remote events
+ Keypress events
+ Local events
+ Remote events
+
+### Event format
+
+Currently, all events take the form of a dictionary object. The only required key is the "channel" key. This key will be used by the application class to identify the proper callbacks which receive the message.
+
+Message callbacks must take two parameters: either the application or widget object to which the callback is bound, and the message itself.
+
+Since this is a very preliminary implementaiton, the message format is most definitely subject to change.
 
 ### Remote event dispatch
 
