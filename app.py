@@ -1,15 +1,14 @@
 import logging
 import argparse
-import sys
 import json
 
 from display import TartanDisplay
 from local_event_dispatch import LocalEventDispatch
 from remote_event_dispatch import RemoteEventDispatch
-from util import *
+from util import multiIndex, isDict
 
 import caca
-from caca.display import Display, DisplayError, Event
+from caca.display import Event
 import hooks
 
 class App:
@@ -106,7 +105,7 @@ class App:
             self.display = TartanDisplay(self, self.spec, self.args.driver)
         else:
             self.display = TartanDisplay(self, self.spec)
-        self.local_event_dispatch = LocalEventDispatch()
+        self.local_event_dispatch = LocalEventDispatch(self)
         self.digest_rate = 1000 #ms
         self.keypress_queue = []
         self.event_thing = Event()
@@ -171,10 +170,6 @@ class App:
     def register_keypress_hook(self, hook):
         hook["func"] = getattr(hooks, hook["func"])
 
-    def get_handler_for_key(self, key):
-        res = filter(lambda hook: ord(hook["key"]) == key, self.keypress_hooks)
-        return res
-
     def get_widget_hook_for_key(self, key):
         """
         Return the widget and relevant hook for the key
@@ -185,18 +180,12 @@ class App:
         return res[0] if len(res) > 0 else None
 
     def get_focused_widget_hook_for_key(self, key):
-        """
-        TODO write this docstring
-        """
         return self.display.focused_widget.get_focused_keyhook_for(key)
 
     def get_focused_widget_catchall_hook(self):
         return self.display.focused_widget.get_focused_keyhook_for("ALL")
 
     def get_hook_for_key(self, key):
-        """
-        Get app hook for key
-        """
         res = filter(lambda x: x["key"] == key,
                      self.spec["app"]["keyHooks"])
         if len(res) > 0:
@@ -205,20 +194,25 @@ class App:
             res = None
         return res
 
-    def process_remote_messages(self):
-        for message in self.remote_messages:
+    def process_messages(self, msg_type="remote"):
+        message_collection = self.remote_messages if msg_type == \
+            "remote" else self.local_event_dispatch.messages
+
+        print "processing messages: " + str(message_collection)
+        for message in message_collection:
             for widget in self.display.widgets:
-                message_dict = json.loads(message)
-                hook = widget.get_remote_message_hook_for_channel(message_dict["channel"])
+                hook = widget.get_message_hook_for_channel(message["channel"],
+                                                           msg_type=msg_type)
                 if hook:
-                    hook["func"](widget, message=message_dict["message"], channel=message_dict["channel"])
-            self.remote_messages.remove(message)
+                    hook["func"](widget, message=message)
+            message_collection.remove(message)
 
     def process_keypresses(self):
-        if self.display.display.get_event(caca.EVENT_KEY_PRESS, self.event_thing, self.digest_rate):
+        if self.display.display.get_event(caca.EVENT_KEY_PRESS,
+                                          self.event_thing,
+                                          self.digest_rate):
             if self.event_thing.get_type() == caca.EVENT_KEY_PRESS:
                 key = chr(self.event_thing.get_key_ch())
-
                 hook = self.get_hook_for_key(key)
                 if hook != None:
                     hook["func"](self)
@@ -238,7 +232,7 @@ class App:
                             if hook != None:
                                 hook["func"](hook["widget"], key=key)
                 # TODO: Else run unhandled_input hook
-                key=None # Reset key
+                key = None # Reset key
 
     def run(self):
         self.display.build_display()
@@ -247,5 +241,6 @@ class App:
                 self.display.refresh()
                 self.process_keypresses()
                 if self.specifies("network", True, ["app"]):
-                    self.process_remote_messages()
+                    self.process_messages()
+                    self.process_messages(msg_type="local")
                     self.remote_dispatch.check_queue()

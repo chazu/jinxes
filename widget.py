@@ -42,9 +42,10 @@ class Widget(object):
         return (self.current_state if check_against_spec == False
                     else self.spec)
 
-    def get_remote_message_hook_for_channel(self, channel_name):
+    def get_message_hook_for_channel(self, channel_name, msg_type="remote"):
+        msg_locale = "remoteMessageHooks" if msg_type == "remote" else "localMessageHooks"
         res = filter(lambda x: x["channel"] == channel_name,
-               self.current_state["remoteMessageHooks"])
+               self.current_state[msg_locale])
         if len(res) > 0:
             res = res[0].copy()
             res["widget"] = self
@@ -289,11 +290,7 @@ class Widget(object):
         res = res[:end]
         return res
 
-    def register_keypress_hook(self, hook):
-        func = getattr(hooks, hook["func"])
-        hook["func"] = getattr(hooks, hook["func"])
-
-    def register_remote_message_hook(self, hook):
+    def register_hook(self, hook):
         func = getattr(hooks, hook["func"])
         hook["func"] = getattr(hooks, hook["func"])
 
@@ -307,22 +304,28 @@ class Widget(object):
         ## Initialize focused keyhooks
         if self.specifies("focusedKeyHooks", check_against_spec=True):
             for hook in self.spec["focusedKeyHooks"]:
-                self.register_keypress_hook(hook)
+                self.register_hook(hook)
         else:
             self.spec["focusedKeyHooks"] = []
 
         ## Initialize keyhooks
         if self.specifies("keyHooks", check_against_spec=True):
             for hook in self.spec["keyHooks"]:
-                self.register_keypress_hook(hook)
+                self.register_hook(hook)
         else:
             self.spec["keyHooks"] = []
 
         if self.specifies("remoteMessageHooks", check_against_spec=True):
             for hook in self.spec["remoteMessageHooks"]:
-                self.register_remote_message_hook(hook)
+                self.register_hook(hook)
         else:
             self.spec["remoteMessageHooks"] = []
+
+        if self.specifies("localMessageHooks", check_against_spec=True):
+            for hook in self.spec["localMessageHooks"]:
+                self.register_hook(hook)
+        else:
+            self.spec["localMessageHooks"] = []
 
         self.cached_state = copy(self.spec)
         self.current_state = copy(self.spec)

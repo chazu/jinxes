@@ -1,10 +1,6 @@
-import json, os
+from caca.canvas import Canvas
+from caca.display import Display
 
-import caca
-from caca.canvas import Canvas, CanvasError
-from caca.display import Display, DisplayError, Event
-
-from widget import Widget
 from fileparser import FileParser
 
 class TartanDisplay(object):
@@ -13,6 +9,7 @@ class TartanDisplay(object):
         self.app = app
         self.spec = spec
         self.widgets = []
+        self.focus_order = None
         self.parser = FileParser(self.app)
         self.widgets = self.parser.parse(self.spec["widgets"])
         self.canvas = Canvas(self.spec["app"]["width"],

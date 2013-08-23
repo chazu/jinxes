@@ -65,12 +65,21 @@ def appendKeyToTextBuffer(widget, **kwargs):
     widget.current_state["contents"]["text"] += kwargs["key"]
     widget.mark_dirty()
 
-def printKey(widget, **kwargs):
-    print(kwargs["key"])
-
+def sendLocalCommand(widget, **kwargs):
+    send = widget.current_state["contents"]["text"]
+    widget.app.local_event_dispatch.emit_message({
+            "channel": "command",
+            "body": send
+            })
+    widget.current_state["contents"]["text"] = ""
+    widget.mark_dirty()
 #########################################################
 # MESSAGE HOOKS
 
+def printLocalCommand(widget, **kwargs):
+    widget.current_state["contents"]["text"] += kwargs["message"]["body"]
+    widget.mark_dirty()
+
 def appendBodyToTextBuffer(widget, **kwargs):
-    widget.current_state["contents"]["text"] += kwargs["message"]
+    widget.current_state["contents"]["text"] += kwargs["message"]["body"]
     widget.mark_dirty()

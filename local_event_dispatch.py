@@ -1,6 +1,6 @@
 class LocalEventDispatch:
     """
-    Takes application-level events and routes them to the app's local message
+    Takes oapplication-level events and routes them to the app's local message
     queue.
 
     TODO: Since both this class and TartanDisplay use
@@ -9,8 +9,9 @@ class LocalEventDispatch:
 
     def __init__(self, app):
         self.app = app
+        self.messages = []
 
     def emit_message(self, message):
         """
         """
-        self.app.local_messages.append(message)
+        self.messages.append(message)

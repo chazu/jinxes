@@ -33,3 +33,8 @@ def multiIndexAssign(the_object, index_array, value):
 
 def isDict(thing):
     return type(thing) == dict
+
+def normalize_key_representation_for_hook(hook_dict):
+    if type(hook_dict["key"]) != int and \
+            hook_dict["key"] != "ALL":
+        hook_dict["key"] == ord(hook_dict["key"])

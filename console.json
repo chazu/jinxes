@@ -57,6 +57,12 @@
                     "func": "appendBodyToTextBuffer"
                 }
             ],
+            "localMessageHooks": [
+                {
+                    "channel": "command",
+                    "func": "printLocalCommand"
+                }
+            ],
             "focusedKeyHooks": [
                 {
                     "key": "ALL",
@@ -76,6 +82,10 @@
             "anchor": [0, 23],
             "keyHooks": [],
             "focusedKeyHooks": [
+                {
+                    "key": "\r",
+                    "func": "sendLocalCommand"
+                },
                 {
                     "key": "ALL",
                     "func": "appendKeyToTextBuffer"
