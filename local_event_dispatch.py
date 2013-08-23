@@ -1,25 +1,16 @@
 class LocalEventDispatch:
     """
-    Takes events from inside of the engine (caca events
-    such as keypresses), matches them to widgets
-    and executes callbacks which affect widgets.
+    Takes application-level events and routes them to the app's local message
+    queue.
 
-    Mapping of events to widgets is established at
-    instance initialization based on the specification
-    document used to construct the UI.
     TODO: Since both this class and TartanDisplay use
     the spec, pass it into both constructors
     """
 
-    def __init__(self):
-        """
-        Parse the spec and create mappings to various
-        functions that will affect UI state
-        """
-        pass
+    def __init__(self, app):
+        self.app = app
 
-    def dispatch_events(self, events):
+    def emit_message(self, message):
         """
-        Do your magic: tell widgets what to do
         """
-        pass
+        self.app.local_messages.append(message)
