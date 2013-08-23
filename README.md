@@ -85,31 +85,19 @@ Draw methods are what they sound like: they do all the manipulation of the wrapp
 ## TODO
 
 ### key bindings/event loop/messaging & events
-- Application-wide primitives
-- Widget-specific events
-  - Specify widget must be focused for event to trigger
-    {
-      "key" : "t",
-      "func": "widgetSpecificHook",
-      "requireFocus": true
-    }
+ - Local event dispatching (non-network, non-keypress-oriented hooks)
 
 ### formatting and styling
 - App-wide config
     - Fullscreen (Useless later on but for now...)
 - widget formatting
-  - separate color schemes and formatting styles
-  - align: left, right, center
+  - integrate boldness etc into styles
+  - alignment
   - margin - horizontal and vertical
-- other styling
-  - reverse video
-  - emphasis?
 - widget nesting
 - Widget content types -
-  - text/line buffers
-  - widgets
+  - text vs line buffers vs widget buffers vs formatted text buffers...
   - collections (e.g. list boxes)
-- menus - list boxes, form controls
 
 ## Textual markup language for line/text buffers
 - colors
