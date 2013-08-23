@@ -76,7 +76,7 @@ class App:
                 return key in target.keys() and (
                     target[key] == value if value != None else True)
         except KeyError:
-            logging.warn("Key error when requesting path " + \
+            self.logger.warn("Key error when requesting path " + \
                 str(path) + " for widget " + self.name)
             return False
 
@@ -90,15 +90,15 @@ class App:
                                      default=False)
         self.arg_parser.add_argument("--loglevel",
                                  help="DEBUG, INFO or WARN",
-                                 default="debug")
+                                 default="DEBUG")
         self.arg_parser.add_argument("--driver",
                                      action="store",
                                      dest="driver",
                                      help="Select display driver: gl, curses, slang")
         self.args = self.arg_parser.parse_args()
 
-        # Configure logging TODO: Use one logger object everywhere
-        logging.basicConfig(level=getattr(logging, self.args.loglevel))
+        self.logger = logging.getLogger()
+        self.logger.setLevel(self.args.loglevel)
 
         # Initialize Spec/State
         self.initialize_app_spec(filename)
@@ -132,7 +132,7 @@ class App:
         to a format usable by the engine, i.e.
         convert color names to caca values
         """
-        logging.debug("Loading App Style " + style["name"])
+        self.logger.debug("Loading App Style " + style["name"])
         color_mapped_style = {
             "name": style["name"],
             "fgColor": App.defaultColorMap[style["fgColor"]],
@@ -140,33 +140,33 @@ class App:
             }
         if "reverse" in style.keys():
             color_mapped_style["reverse"] = style["reverse"]
-        logging.debug("Color mapped style:")
-        logging.debug(str(color_mapped_style))
+        self.logger.debug("Color mapped style:")
+        self.logger.debug(str(color_mapped_style))
         return color_mapped_style
 
     def load_styles(self):
         for style in self.spec["styles"]:
             self.styles.append(self.process_style(style))
-        logging.debug("Final styles for app:")
-        logging.debug(str(self.styles))
+        self.logger.debug("Final styles for app:")
+        self.logger.debug(str(self.styles))
 
     def load_keypress_hooks(self):
         for hook in self.spec["app"]["keyHooks"]:
             self.register_keypress_hook(hook)
 
     def initialize_default_app_spec(self):
-        logging.info("Initialized default app spec")
+        self.logger.info("Initialized default app spec")
         self.spec = App.defaultAppState.copy()
-        logging.debug("default spec: " + str(self.spec))
+        self.logger.debug("default spec: " + str(self.spec))
 
     def initialize_app_spec(self, filepath):
         self.initialize_default_app_spec()
         if filepath != None:
-            logging.info("App loading filepath: " + str(filepath))
+            self.logger.info("App loading filepath: " + str(filepath))
             loaded_spec = json.load(open(filepath))
-            logging.debug("Loaded spec: " + str(loaded_spec))
+            self.logger.debug("Loaded spec: " + str(loaded_spec))
             self.spec.update(loaded_spec)
-            logging.debug("Updated spec: " + str(self.spec))
+            self.logger.debug("Updated spec: " + str(self.spec))
 
     def register_keypress_hook(self, hook):
         hook["func"] = getattr(hooks, hook["func"])
