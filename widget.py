@@ -6,6 +6,8 @@ import caca
 from caca.canvas import Canvas, CanvasError
 from caca.display import Display, DisplayError, Event
 
+from buffers import TextualBuffer
+
 import hooks
 from util import *
 
@@ -184,7 +186,7 @@ class Widget(object):
     def draw_line_buffer(self):
         line_start = copy(self.text_origin)
         self.set_canvas_color_per_style_for("contents")
-        for line in self.get_visible_slice():
+        for line in self.buffer.get_visible_slice():
             self.canvas.put_str(line_start[0],
                                 line_start[1],
                                 line)
@@ -221,22 +223,11 @@ class Widget(object):
         else:
             self.border = Widget.defaultBorderAttributes.copy()
 
-    def line_buffer_builder(self):
-        """
-        Update internal line buffer based on dimensions
-        of widget, border and length of text contents
-
-        Call this after resize
-        """
-        draw_width = (self.current_state["width"] - 2 if self.specifies("border") else self.width)
-        self.line_buffer = chunks(self.text_buffer, draw_width)
-        # Dont allow scrolling beyond end of line buffer
-        self.scroll["maxCurrentLine"] = len(self.line_buffer)
-
     def text_buffer_builder(self):
         # logging.debug("Calling text buffer builder for " + self.name)
         if self.specifies("text", path=["contents"]):
-            self.text_buffer = self.current_state["contents"]["text"]
+            if self.buffer == None:
+                self.buffer = TextualBuffer(self)
         if self.specifies("border"):
             self.text_origin = [1, 1]
         else:
@@ -274,21 +265,11 @@ class Widget(object):
         self.border_builder()
         self.scroll_builder()
         self.text_buffer_builder()
-        self.line_buffer_builder()
+        self.buffer.build_lines()
         self.visible_slice_builder()
 
     def update_scroll_current_line(self, delta):
         self.scroll["currentLine"] += int(delta)
-
-    def get_visible_slice(self):
-        """
-        return visible segment of line buffer
-        """
-        start = self.scroll["currentLine"]
-        end = start + self.visible_lines
-        res = self.line_buffer[start:]
-        res = res[:end]
-        return res
 
     def register_hook(self, hook):
         func = getattr(hooks, hook["func"])
@@ -374,6 +355,7 @@ class Widget(object):
         self.app = app
         self.initialize_spec_and_state(spec)
         self.dirty = False
+        self.buffer = None
 
         self.width = self.current_state["width"]
         self.height = self.current_state["height"]
