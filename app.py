@@ -76,7 +76,7 @@ class App:
                     target[key] == value if value != None else True)
         except KeyError:
             self.logger.warn("Key error when requesting path " + \
-                str(path) + " for widget " + self.name)
+                str(path) + " for widget " + str(self))
             return False
 
     def __init__(self, filename=None):
