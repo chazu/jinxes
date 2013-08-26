@@ -62,24 +62,24 @@ def restoreFocusWidget(app, **kwargs):
 # WIDGET HOOKS
 
 def appendKeyToTextBuffer(widget, **kwargs):
-    widget.current_state["contents"]["text"] += kwargs["key"]
+    widget.buffer.add_text(kwargs["key"])
     widget.mark_dirty()
 
 def sendLocalCommand(widget, **kwargs):
-    send = widget.current_state["contents"]["text"]
+    send = widget.buffer.get_text()
     widget.app.local_event_dispatch.emit_message({
             "channel": "command",
             "body": send
             })
-    widget.current_state["contents"]["text"] = ""
+    widget.buffer.clear()
     widget.mark_dirty()
 #########################################################
 # MESSAGE HOOKS
 
 def printLocalCommand(widget, **kwargs):
-    widget.current_state["contents"]["text"] += kwargs["message"]["body"]
+    widget.buffer.add_text(kwargs["message"]["body"])
     widget.mark_dirty()
 
 def appendBodyToTextBuffer(widget, **kwargs):
-    widget.current_state["contents"]["text"] += kwargs["message"]["body"]
+    widget.buffer.add_text(kwargs["message"]["body"])
     widget.mark_dirty()
