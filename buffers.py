@@ -47,7 +47,7 @@ class TextualBuffer:
 
     def build_lines(self):
         self._lines = chunks(self._text, self.draw_width)
-        self.widget.scroll["maxCurrentLine"] = len(self._lines)
+        self.scroll["maxCurrentLine"] = len(self._lines)
 
     def build_scroll_characteristics(self):
         if self.widget.specifies("border"):
