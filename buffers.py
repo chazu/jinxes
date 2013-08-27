@@ -1,7 +1,6 @@
 from util import chunks, isDict
 
 
-
 class TextualBuffer:
 
     defaultScrollingAttributes = {
