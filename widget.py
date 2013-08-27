@@ -218,7 +218,7 @@ class Widget(object):
         else:
             self.border = Widget.defaultBorderAttributes.copy()
 
-    def text_buffer_builder(self):
+    def buffer_builder(self):
         # logging.debug("Calling text buffer builder for " + self.name)
         if self.specifies("text", path=["contents"]):
             if self.buffer == None:
@@ -234,24 +234,11 @@ class Widget(object):
         else:
             self.anchor = (0, 0)
 
-    def visible_slice_builder(self):
-        """
-        initialize or change visible slice
-        """
-        if self.specifies("border"):
-            self.visible_lines = self.current_state["height"] - 2
-        else:
-            self.visible_lines = self.current_state["height"]
-
     def build_all(self):
         self.anchor_builder()
         self.border_builder()
-        self.text_buffer_builder()
+        self.buffer_builder()
         self.buffer.build_lines()
-        self.visible_slice_builder()
-
-    def update_scroll_current_line(self, delta):
-        self.buffer.scroll["currentLine"] += int(delta)
 
     def register_hook(self, hook):
         func = getattr(hooks, hook["func"])
