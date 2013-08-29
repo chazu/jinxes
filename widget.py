@@ -219,10 +219,15 @@ class Widget(object):
             self.border = Widget.defaultBorderAttributes.copy()
 
     def buffer_builder(self):
-        # logging.debug("Calling text buffer builder for " + self.name)
-        if self.specifies("text", path=["contents"]):
+        # Build buffer depending on contents type
+        if self.specifies("type", path=["contents"], value="text"):
+            # TODO Either refactor out builders and RE-builders,
+            # or make all builders idempotent
             if self.buffer == None:
                 self.buffer = TextualBuffer(self)
+            else:
+                self.buffer.build()
+        # TODO Refactor the following into border builder method
         if self.specifies("border"):
             self.text_origin = [1, 1]
         else:
