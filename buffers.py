@@ -9,7 +9,7 @@ class TextualBuffer:
         "noVisibleLines": 0
         }
 
-    def __init__(self, widget, text=None):
+    def __init__(self, widget):
         self.widget = widget
         self.draw_width = 0
 
@@ -18,7 +18,9 @@ class TextualBuffer:
            isDict(self.widget.current_state["scroll"]):
                   self.scroll.update(self.widget.current_state["scroll"])
 
-        self._text = text if text != None else ""
+        self._text = self.widget.current_state["contents"]['text'] \
+            if self.widget.specifies('text',
+                                     path=['contents']) else ""
         self._lines = []
         self.build()
 
