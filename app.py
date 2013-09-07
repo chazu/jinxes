@@ -200,7 +200,6 @@ class App:
         message_collection = self.remote_messages if msg_type == \
             "remote" else self.local_event_dispatch.messages
 
-        print "processing messages: " + str(message_collection)
         for message in message_collection:
             for widget in self.display.widgets:
                 hook = widget.get_message_hook_for_channel(message["channel"],
