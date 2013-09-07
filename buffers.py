@@ -1,6 +1,6 @@
 from util import chunks, isDict
 
-class AbstractBuffer:
+class AbstractBuffer(object):
 
     defaultScrollingAttributes = {
         "scroll": True,
@@ -8,13 +8,30 @@ class AbstractBuffer:
         "noVisibleLines": 0
         }
 
-class TextualBuffer(AbstractBuffer):
-
     def __init__(self, widget, text=None):
         self.widget = widget
         self.draw_width = 0
 
         self.scroll = TextualBuffer.defaultScrollingAttributes.copy()
+
+    def get_visible_slice(self):
+        raise Exception, "must be implemented by subclass of AbstractBuffer"
+
+    def build(self):
+        raise Exception, "must be implemented by subclass of AbstractBuffer"
+
+    def __getitem__(self, index):
+        raise Exception, "must be implemented by subclass of AbstractBuffer"
+
+    def clear(self):
+        raise Exception, "must be implemented by subclass of AbstractBuffer"
+
+
+class TextualBuffer(AbstractBuffer):
+
+    def __init__(self, widget, text=None):
+        super(TextualBuffer, self).__init__(widget, text)
+
         if self.widget.specifies("scroll") and \
            isDict(self.widget.current_state["scroll"]):
                   self.scroll.update(self.widget.current_state["scroll"])
@@ -67,6 +84,8 @@ class TextualBuffer(AbstractBuffer):
         return res
 
 
-class LineBuffer:
-    pass
+class LineBuffer(AbstractBuffer):
+
+    def __init__(self, widget, text=None):
+        AbstractBuffer.__init__(widget, text)
 
