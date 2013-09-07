@@ -93,6 +93,7 @@ class App:
         self.arg_parser.add_argument("--driver",
                                      action="store",
                                      dest="driver",
+                                     default="gl",
                                      help="Select display driver: gl, curses, slang")
         self.args = self.arg_parser.parse_args()
 
@@ -101,6 +102,7 @@ class App:
 
         # Initialize Spec/State
         self.initialize_app_spec(filename)
+        logging.debug("USING DRIVER: " + self.args.driver)
         if self.args.driver:
             self.display = TartanDisplay(self, self.spec, self.args.driver)
         else:
