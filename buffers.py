@@ -1,4 +1,5 @@
 from util import chunks, isDict
+import logging
 
 class AbstractBuffer(object):
 
@@ -50,7 +51,6 @@ class TextualBuffer(AbstractBuffer):
 
     def add_text(self, text):
         self._text += text
-        print "Text: " + self._text
 
     def clear(self):
         self._lines = []
@@ -65,6 +65,7 @@ class TextualBuffer(AbstractBuffer):
         self.build_scroll_characteristics()
 
     def build_lines(self):
+        
         self._lines = chunks(self._text, self.draw_width)
         self.scroll["maxCurrentLine"] = len(self._lines)
 
@@ -76,7 +77,6 @@ class TextualBuffer(AbstractBuffer):
             self.scroll["noVisibleLines"] = self.widget.current_state["height"]
 
     def get_visible_slice(self):
-        print self.scroll
         start = self.scroll["currentLine"]
         end = start + self.scroll["noVisibleLines"]
         res = self._lines[start:]
@@ -84,8 +84,58 @@ class TextualBuffer(AbstractBuffer):
         return res
 
 
-class LineBuffer(AbstractBuffer):
+class LineBuffer(TextualBuffer):
 
     def __init__(self, widget, text=None):
-        AbstractBuffer.__init__(widget, text)
+        super(LineBuffer, self).__init__(widget, text)
+        self.point = [0,0]
+        self._lines = [""]
 
+        logging.debug(self._lines)
+
+    def build_lines(self):
+        self.scroll["maxCurrentLine"] = len(self._lines)
+
+    def clear(self):
+        self._lines = [""]
+
+    def point_to_next_line(self):
+        self.point[0] += 1
+        self.point[1] == 0
+        while len(self._lines) < self.point[0] + 1:
+            self._lines.append("")
+
+    def point_to_last_line(self):
+        self.point[0] = len(self._lines) - 1
+
+    def last_line(self):
+        return self._lines[-1]
+
+    def point_to_end_of_buffer(self):
+        self.point[0] = len(self._lines)
+        self.point[1] = len(self._lines[-1])
+
+    def point_to_end_of_line(self):
+        self.point[1] = len(self._lines[-1]) - 1
+
+    def adjust_point_by_lines(self, number):
+        self.point[0] += number
+
+    def adjust_point_by_columns(self, number):
+        self.point[1] += number
+
+    def get_text(self):
+        return "".join(self._lines)
+
+    def add_text(self, text):
+        if len(text) + len(self._lines[self.point[0]]) > self.draw_width:
+            self.point_to_next_line()
+        if len(text) > self.draw_width:
+            lines_to_add = chunks(text, self.draw_width)
+            lines_to_advance = len(lines_to_add)
+            for line in lines_to_add:
+                self._lines.append(line)
+            self.adjust_point_by_lines(lines_to_advance)
+        else:
+            self._lines[self.point[0]] += text
+        self.point_to_end_of_line()
