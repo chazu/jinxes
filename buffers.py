@@ -1,14 +1,15 @@
 from util import chunks, isDict
 
-
-
-class TextualBuffer:
+class AbstractBuffer:
 
     defaultScrollingAttributes = {
         "scroll": True,
         "currentLine": 0,
         "noVisibleLines": 0
         }
+
+
+class TextualBuffer(AbstractBuffer):
 
     def __init__(self, widget, text=None):
         self.widget = widget
@@ -63,3 +64,8 @@ class TextualBuffer:
         res = self._lines[start:]
         res = res[:end]
         return res
+
+
+class LineBuffer:
+
+    
