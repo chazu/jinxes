@@ -78,6 +78,12 @@ def sendLocalCommand(widget, **kwargs):
 
 def printLocalCommand(widget, **kwargs):
     widget.buffer.add_text(kwargs["message"]["body"])
+    widget.buffer.point_to_end_of_buffer()
+    widget.mark_dirty()
+
+def printLocalCommandAsLine(widget, **kwargs):
+    widget.buffer.add_text(kwargs["message"]["body"])
+    widget.buffer.point_to_next_line()
     widget.mark_dirty()
 
 def appendBodyToTextBuffer(widget, **kwargs):
