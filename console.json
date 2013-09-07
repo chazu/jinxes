@@ -42,7 +42,7 @@
         {
             "name": "Console",
             "contents": {
-                "type": "text",
+                "type": "lines",
                 "text": "",
                 "style": "greenBlack"
             },
@@ -61,7 +61,7 @@
             "localMessageHooks": [
                 {
                     "channel": "command",
-                    "func": "printLocalCommand"
+                    "func": "printLocalCommandAsLine"
                 }
             ],
             "focusedKeyHooks": [
