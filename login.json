@@ -1,0 +1,52 @@
+{
+    "styles":
+    [
+        {
+            "name": "default",
+            "bgColor": "blue",
+            "fgColor": "red"
+        }
+    ],
+    "app":
+    {
+        "name": "login test",
+        "network": false,
+        "height": 10,
+        "width": 40,
+        "remoteMessageHooks": [],
+        "keyHooks": [
+            {
+                "key": "q",
+                "func": "quitApp"
+            },
+            {
+                "key": "\t",
+                "func": "incrementAppFocus"
+            }
+        ]
+    },
+    "widgets": [
+        {
+            "name": "username",
+            "contents": {
+                "type": "text",
+                "text": "",
+                "style": "default"
+            },
+            "height": 1,
+            "width": 16,
+            "anchor": [0, 0]
+        },
+        {
+            "name": "password",
+            "contents": {
+                "type": "text",
+                "text": "",
+                "style": "default"
+            },
+            "height": 1,
+            "width": 10,
+            "anchor": [2, 0]
+        }
+    ]
+}
