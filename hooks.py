@@ -4,13 +4,13 @@ def quitApp(app, **kwargs):
     app.quit = True
 
 def scrollFocusDown(app, **kwargs):
-    if (app.display.focused_widget.scroll["currentLine"] <
-        app.display.focused_widget.scroll["maxCurrentLine"]):
-        app.display.focused_widget.scroll["currentLine"] += 1
+    if (app.display.focused_widget.buffer.scroll["currentLine"] <
+        app.display.focused_widget.buffer.scroll["maxCurrentLine"]):
+        app.display.focused_widget.buffer.scroll["currentLine"] += 1
 
 def scrollFocusUp(app, **kwargs):
-    if (app.display.focused_widget.scroll["currentLine"] > 0):
-        app.display.focused_widget.scroll["currentLine"] -= 1
+    if (app.display.focused_widget.buffer.scroll["currentLine"] > 0):
+        app.display.focused_widget.buffer.scroll["currentLine"] -= 1
 
 def incrementAppFocus(app, **kwargs):
     app.display.focused_widget = app.display.focus_order[ \

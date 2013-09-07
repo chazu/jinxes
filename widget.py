@@ -24,11 +24,6 @@ class Widget(object):
         "style": "default"
         }
 
-    defaultScrollingAttributes = {
-        "scroll": False,
-        "currentLine": 0
-        }
-
     # Specification and lookup methods
     # --------------------------------
     # These methods are used to query the widget's spec
@@ -223,11 +218,16 @@ class Widget(object):
         else:
             self.border = Widget.defaultBorderAttributes.copy()
 
-    def text_buffer_builder(self):
-        # logging.debug("Calling text buffer builder for " + self.name)
-        if self.specifies("text", path=["contents"]):
+    def buffer_builder(self):
+        # Build buffer depending on contents type
+        if self.specifies("type", path=["contents"], value="text"):
+            # TODO Either refactor out builders and RE-builders,
+            # or make all builders idempotent
             if self.buffer == None:
                 self.buffer = TextualBuffer(self)
+            else:
+                self.buffer.build()
+        # TODO Refactor the following into border builder method
         if self.specifies("border"):
             self.text_origin = [1, 1]
         else:
@@ -239,37 +239,11 @@ class Widget(object):
         else:
             self.anchor = (0, 0)
 
-    def visible_slice_builder(self):
-        """
-        initialize or change visible slice
-        """
-        if self.specifies("border"):
-            self.visible_lines = self.current_state["height"] - 2
-        else:
-            self.visible_lines = self.current_state["height"]
-
-    def scroll_builder(self):
-        """
-        Build/Initialize state related to scrolling capabilities and
-        behavior
-        """
-        # set up scrolling
-        if self.specifies("scroll"):
-            self.scroll = Widget.defaultScrollingAttributes.copy()
-            self.scroll.update(self.current_state["scroll"])
-        else:
-            self.scroll = Widget.defaultScrollingAttributes.copy()
-
     def build_all(self):
         self.anchor_builder()
         self.border_builder()
-        self.scroll_builder()
-        self.text_buffer_builder()
+        self.buffer_builder()
         self.buffer.build_lines()
-        self.visible_slice_builder()
-
-    def update_scroll_current_line(self, delta):
-        self.scroll["currentLine"] += int(delta)
 
     def register_hook(self, hook):
         func = getattr(hooks, hook["func"])

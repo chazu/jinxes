@@ -20,6 +20,7 @@
     ],
     "app":
     {
+        "name": "console",
         "network": true,
         "height": 25,
         "width": 101,
@@ -41,7 +42,7 @@
         {
             "name": "Console",
             "contents": {
-                "type": "lineBuffer",
+                "type": "text",
                 "text": "",
                 "style": "greenBlack"
             },
@@ -73,7 +74,7 @@
         {
             "name": "Input",
             "contents": {
-                "type": "lineBuffer",
+                "type": "text",
                 "text": "",
                 "style": "greenBlack"
             },
