@@ -6,7 +6,7 @@ import caca
 from caca.canvas import Canvas, CanvasError
 from caca.display import Display, DisplayError, Event
 
-from buffers import TextualBuffer
+from buffers import TextualBuffer, LineBuffer
 
 import hooks
 from util import *
@@ -48,8 +48,6 @@ class Widget(object):
             res["widget"] = self
         else:
             res = None
-        if res != None:
-            print res
         return res
 
     # TODO - the below two methods need to be reeeefactored!
@@ -225,6 +223,13 @@ class Widget(object):
             # or make all builders idempotent
             if self.buffer == None:
                 self.buffer = TextualBuffer(self)
+            else:
+                self.buffer.build()
+        if self.specifies("type", path=["contents"], value="lines"):
+            # TODO Either refactor out builders and RE-builders,
+            # or make all builders idempotent
+            if self.buffer == None:
+                self.buffer = LineBuffer(self)
             else:
                 self.buffer.build()
         # TODO Refactor the following into border builder method
