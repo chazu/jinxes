@@ -56,6 +56,9 @@ class TextualBuffer(AbstractBuffer):
         self._lines = []
         self._text = ""
 
+    def delete_char_at_index(self, index):
+        self._text = self._text[0:index]
+
     def build(self):
         # set draw width
         self.draw_width = (self.widget.current_state["width"] - 2
@@ -65,7 +68,7 @@ class TextualBuffer(AbstractBuffer):
         self.build_scroll_characteristics()
 
     def build_lines(self):
-        
+
         self._lines = chunks(self._text, self.draw_width)
         self.scroll["maxCurrentLine"] = len(self._lines)
 
