@@ -65,6 +65,10 @@ def appendKeyToTextBuffer(widget, **kwargs):
     widget.buffer.add_text(kwargs["key"])
     widget.mark_dirty()
 
+def deleteLastCharFromTextBuffer(widget, **kwargs):
+    widget.buffer.delete_char_at_index(-1)
+    widget.mark_dirty()
+
 def sendLocalCommand(widget, **kwargs):
     send = widget.buffer.get_text()
     widget.app.local_event_dispatch.emit_message({

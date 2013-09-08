@@ -66,6 +66,10 @@
             ],
             "focusedKeyHooks": [
                 {
+                    "key": "\b",
+                    "func": "deleteLastCharFromTextBuffer"
+                },
+                {
                     "key": "ALL",
                     "func": "appendKeyToTextBuffer"
                 }

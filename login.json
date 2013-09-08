@@ -35,7 +35,17 @@
             },
             "height": 1,
             "width": 16,
-            "anchor": [0, 0]
+            "anchor": [0, 0],
+            "focusedKeyHooks": [
+                {
+                    "key": "\b",
+                    "func": "deleteLastCharFromTextBuffer"
+                },
+                {
+                    "key": "ALL",
+                    "func": "appendKeyToTextBuffer"
+                }
+            ]
         },
         {
             "name": "password",
@@ -46,7 +56,17 @@
             },
             "height": 1,
             "width": 10,
-            "anchor": [2, 0]
+            "anchor": [0, 1],
+            "focusedKeyHooks": [
+                {
+                    "key": "\b",
+                    "func": "deleteLastCharFromTextBuffer"
+                },
+                {
+                    "key": "ALL",
+                    "func": "appendKeyToTextBuffer"
+                }
+            ]
         }
     ]
 }
